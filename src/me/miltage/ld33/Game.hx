@@ -4,14 +4,22 @@ import openfl.display.Sprite;
 import openfl.display.Bitmap;
 import openfl.Lib;
 import openfl.display.BitmapData;
+import openfl.events.Event;
+
+import me.miltage.ld33.math.BB;
+import me.miltage.ld33.utils.KeyObject;
 
 class Game extends Sprite {
 
 	var bg:BitmapData;
 	var entities:Array<Entity>;
+
+	var keys:KeyObject;
 	
 	public function new(){
 		super();
+
+		keys = new KeyObject(Lib.current.stage);
 
 		bg = new BitmapData(Std.int(Lib.application.window.width/Main.scale), Std.int(Lib.application.window.height/Main.scale), false, 0x353d31);
 		var b:Bitmap = new Bitmap(bg);
@@ -19,8 +27,30 @@ class Game extends Sprite {
 
 		entities = [];
 
-		var e = new Entity(16, 16);
+		var e = new Entity(this, 16, 16);
 		entities.push(e);
 		addChild(e);
+
+		addEventListener(Event.ENTER_FRAME, update);
+	}
+
+	public function update(e:Event){
+		for(e in entities)
+			e.update();
+
+		if(keys.isDown(KeyObject.RIGHT))
+			entities[0].move(2, 0);
+		if(keys.isDown(KeyObject.LEFT))
+			entities[0].move(-2, 0);
+		if(keys.isDown(KeyObject.UP))
+			entities[0].move(0, -2);
+		if(keys.isDown(KeyObject.DOWN))
+			entities[0].move(0, 2);
+	}
+
+	public function getBBs(e:Entity):Array<BB> {
+		var list:Array<BB> = new Array<BB>();
+		list.push(new BB(null, 0, 0, 50, 50));
+		return list;
 	}
 }

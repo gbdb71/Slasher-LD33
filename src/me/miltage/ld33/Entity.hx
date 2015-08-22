@@ -4,22 +4,120 @@ import openfl.display.Sprite;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 
-class Entity extends Sprite {
+import me.miltage.ld33.math.Vec2;
+import me.miltage.ld33.math.BBOwner;
+import me.miltage.ld33.math.BB;
+
+class Entity extends Sprite implements BBOwner {
 	
 	public var w:Int;
 	public var h:Int;
 
-	public function new(w, h){
+	public var pos:Vec2;
+
+	private var world:Game;
+
+	public function new(game, w, h){
 		super();
+		world = game;
 
 		this.w = w;
 		this.h = h;
 		w = h = 16;
+		pos = new Vec2(100, 100);
 
 		var bmd = new BitmapData(w, h, true, 0x353d31);
 		var b = new Bitmap(bmd);
 		addChild(b);
 
 		bmd.fillRect(bmd.rect, 0xffffffff);
+	}
+
+	public function update(){
+		x = pos.x - w/2;
+		y = pos.y - h/2;
+	}
+
+	public function handleCollision(entity:Entity, xa:Float, ya:Float):Bool {
+		return true;
+	}
+
+	public function getBB():BB {
+		return new BB(this, pos.x - w/2, pos.y - h/2, pos.x + w/2, pos.y + h/2);
+	}
+
+	public function move(xa:Float, ya:Float):Bool {
+		var bbs:Array<BB> = world.getBBs(this);
+		var moved = false;
+		moved = partMove(bbs, xa, 0);
+		moved = partMove(bbs, 0, ya);
+		return moved;
+	}
+
+	private function partMove(bbs:Array<BB>, xa:Float, ya:Float):Bool {
+		var oxa = xa;
+		var oya = ya;
+		var from:BB = getBB();
+
+		var closest:BB = null;
+		var epsilon = 0.01;
+		for (i in 0...bbs.length) {
+			var to:BB = bbs[i];
+			if (from.intersectsBB(to))
+				continue;
+
+			if (ya == 0) {
+				if (to.y0 >= from.y1 || to.y1 <= from.y0)
+					continue;
+				if (xa > 0) {
+					var xrd = to.x0 - from.x1;
+					if (xrd >= 0 && xa > xrd) {
+						closest = to;
+						xa = xrd - epsilon;
+						if (xa < 0)
+							xa = 0;
+					}
+				} else if (xa < 0) {
+					var xld = to.x1 - from.x0;
+					if (xld <= 0 && xa < xld) {
+						closest = to;
+						xa = xld + epsilon;
+						if (xa > 0)
+							xa = 0;
+					}
+				}
+			}
+
+			if (xa == 0) {
+				if (to.x0 >= from.x1 || to.x1 <= from.x0)
+					continue;
+				if (ya > 0) {
+					var yrd = to.y0 - from.y1;
+					if (yrd >= 0 && ya > yrd) {
+						closest = to;
+						ya = yrd - epsilon;
+						if (ya < 0)
+							ya = 0;
+					}
+				} else if (ya < 0) {
+					var yld = to.y1 - from.y0;
+					if (yld <= 0 && ya < yld) {
+						closest = to;
+						ya = yld + epsilon;
+						if (ya > 0)
+							ya = 0;
+					}
+				}
+			}
+		}
+		if (closest != null && closest.owner != null) {
+			closest.owner.handleCollision(this, oxa, oya);
+		}
+		if (xa != 0 || ya != 0) {
+			pos.x += xa;
+			pos.y += ya;
+			return true;
+		}
+		return false;
 	}
 }
