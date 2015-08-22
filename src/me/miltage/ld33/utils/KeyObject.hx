@@ -13,6 +13,10 @@ class KeyObject {
 	public static var DOWN:UInt = Keyboard.DOWN;
 	public static var LEFT:UInt = Keyboard.LEFT;
 	public static var RIGHT:UInt = Keyboard.RIGHT;
+	public static var W:UInt = Keyboard.W;
+	public static var A:UInt = Keyboard.A;
+	public static var S:UInt = Keyboard.S;
+	public static var D:UInt = Keyboard.D;
 
 	public function new(stage:Stage) {
 		construct(stage);
