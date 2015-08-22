@@ -1,4 +1,4 @@
-package;
+package me.miltage.ld33;
 
 
 import openfl.display.Sprite;

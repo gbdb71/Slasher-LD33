@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	
-	<meta title="LD33" package="com.sample.ld33" version="1.0.0" company="Company Name" />
-	<app main="Main" path="Export" file="LD33" />
+	<meta title="LD33" package="me.miltage.ld33" version="1.0.0" company="Company Name" />
+	<app main="me.miltage.ld33.Main" path="Export" file="LD33" />
 	<window width="800" height="600" />
 	
-	<source path="Source" />
+	<source path="src" />
 	
 	<haxelib name="openfl" />
 	
