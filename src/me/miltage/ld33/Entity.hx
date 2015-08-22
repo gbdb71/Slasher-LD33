@@ -14,18 +14,25 @@ class Entity extends Sprite implements BBOwner {
 	public var h:Int;
 
 	public var pos:Vec2;
+	public var facing:Vec2;
+	private var target:Vec2;
 
 	private var world:Game;
+	private var bmd:BitmapData;
+	private var yoffset:Int;
+	private var bounce:Float;
 
-	public function new(game, w, h){
+	public function new(game, x, y, w, h){
 		super();
 		world = game;
 
 		this.w = w;
 		this.h = h;
-		pos = new Vec2(100, 100);
+		pos = new Vec2(x, y);
+		facing = new Vec2(0, 1);
+		target = new Vec2(10, 10);
 
-		var bmd = new BitmapData(w, h, true, 0x353d31);
+		bmd = new BitmapData(w, h, true, 0x353d31);
 		var b = new Bitmap(bmd);
 		addChild(b);
 
@@ -33,8 +40,19 @@ class Entity extends Sprite implements BBOwner {
 	}
 
 	public function update(){
+		if(target != null){
+			var d = target.sub(pos);
+			bounce = Math.sin(d.length()/1.2)*2;
+			if(d.length()<1) target = null;
+			d.normalizeSelf();
+			facing = d.clone();
+			pos.x += d.x;
+			pos.y += d.y;
+		}
+
 		x = pos.x - w/2;
-		y = pos.y - h/2;
+		y = pos.y - h/2 - yoffset - bounce;
+		render();
 	}
 
 	public function handleCollision(entity:Entity, xa:Float, ya:Float):Bool {
@@ -118,5 +136,13 @@ class Entity extends Sprite implements BBOwner {
 			return true;
 		}
 		return false;
+	}
+
+	private function render(){
+
+	}
+
+	public function setTarget(t:Vec2){
+		target = t;
 	}
 }

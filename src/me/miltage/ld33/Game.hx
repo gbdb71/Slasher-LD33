@@ -15,7 +15,7 @@ class Game extends Sprite {
 
 	var bg:BitmapData;
 	var data:BitmapData;
-	var entities:Array<Entity>;
+	public var entities:Array<Entity>;
 
 	var keys:KeyObject;
 	
@@ -33,9 +33,13 @@ class Game extends Sprite {
 
 		entities = [];
 
-		var e = new Entity(this, 8, 8);
+		var e = new Entity(this, 100, 100, 8, 8);
 		entities.push(e);
 		addChild(e);
+
+		var t0 = new Teen(this, 220, 180);
+		entities.push(t0);
+		addChild(t0);
 
 		addEventListener(Event.ENTER_FRAME, update);
 
@@ -45,10 +49,10 @@ class Game extends Sprite {
 
 		var list = getBBs(null);
 		for(bb in list){
-			GraphicsUtil.drawLine(data, bb.x0, bb.y0, bb.x1, bb.y0, 0xffff0000);
+			/*GraphicsUtil.drawLine(data, bb.x0, bb.y0, bb.x1, bb.y0, 0xffff0000);
 			GraphicsUtil.drawLine(data, bb.x0, bb.y0, bb.x0, bb.y1, 0xffff0000);
 			GraphicsUtil.drawLine(data, bb.x0, bb.y1, bb.x1, bb.y1, 0xffff0000);
-			GraphicsUtil.drawLine(data, bb.x1, bb.y0, bb.x1, bb.y1, 0xffff0000);
+			GraphicsUtil.drawLine(data, bb.x1, bb.y0, bb.x1, bb.y1, 0xffff0000);*/
 		}
 
 	}
@@ -84,15 +88,15 @@ class Game extends Sprite {
 		list.push(new BB(null, 92, 212, 281, 215));
 		list.push(new BB(null, 299, 212, 320, 215));
 
-		list.push(new BB(null, 91, 66, 94, 214));
-		list.push(new BB(null, 160, 66, 163, 82));
-		list.push(new BB(null, 160, 97, 163, 169));
-		list.push(new BB(null, 160, 184, 163, 213));
-		list.push(new BB(null, 186, 66, 189, 82));
-		list.push(new BB(null, 186, 97, 189, 169));
-		list.push(new BB(null, 186, 184, 189, 213));
-		list.push(new BB(null, 241, 66, 244, 117));
-		list.push(new BB(null, 320, 65, 323, 215));
+		list.push(new BB(null, 91, 66, 95, 214));
+		list.push(new BB(null, 160, 66, 164, 82));
+		list.push(new BB(null, 160, 97, 164, 169));
+		list.push(new BB(null, 160, 184, 164, 213));
+		list.push(new BB(null, 186, 66, 190, 82));
+		list.push(new BB(null, 186, 97, 190, 169));
+		list.push(new BB(null, 186, 184, 190, 213));
+		list.push(new BB(null, 241, 66, 245, 117));
+		list.push(new BB(null, 320, 65, 324, 215));
 
 		list.push(new BB(null, 260, 238, 263, 241));
 		list.push(new BB(null, 319, 238, 322, 241));
