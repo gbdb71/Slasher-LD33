@@ -23,7 +23,6 @@ class Entity extends Sprite implements BBOwner {
 
 		this.w = w;
 		this.h = h;
-		w = h = 16;
 		pos = new Vec2(100, 100);
 
 		var bmd = new BitmapData(w, h, true, 0x353d31);

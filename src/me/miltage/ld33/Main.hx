@@ -3,6 +3,7 @@ package me.miltage.ld33;
 
 import openfl.display.Sprite;
 import openfl.Lib;
+import openfl.events.MouseEvent;
 
 
 class Main extends Sprite {
@@ -19,7 +20,13 @@ class Main extends Sprite {
 		game = new Game();
 		game.scaleX = game.scaleY = scale;
 		addChild(game);
+
+		addEventListener(MouseEvent.CLICK, leftClick);
 		
+	}
+
+	public function leftClick(m:MouseEvent){
+		trace(m.stageX/scale+", "+m.stageY/scale);
 	}
 	
 	
