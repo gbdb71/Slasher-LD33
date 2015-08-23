@@ -5,6 +5,8 @@ import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.Assets;
 
+import me.miltage.ld33.math.BB;
+
 class Car extends Entity {
 
 	var lights:Bitmap;
@@ -16,7 +18,7 @@ class Car extends Entity {
 	var done:Bool = false;
 
 	public function new(){
-		super(null, 650, 260, 150, 46);
+		super(null, 650, 270, 150, 46);
 
 		chassis = new Bitmap(Assets.getBitmapData("assets/chassis.png"));
 		addChild(chassis);
@@ -37,7 +39,7 @@ class Car extends Entity {
 
 		if(pos.x < 150) vx *= 0.8;
 
-		chassis.y = Math.sin(vx*2);
+		chassis.y = Math.cos(vx*3);
 
 		if(vx < 1 && lightsDelay > 0) lightsDelay--;
 		else if(vx < 1 && lights.visible){
@@ -48,6 +50,10 @@ class Car extends Entity {
 			Game.instance.addTeens();
 			done = true;
 		}
+	}
+
+	override public function getBB():BB {
+		return new BB(this, 144, 266, 185, 281);
 	}
 	
 }

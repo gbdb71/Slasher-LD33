@@ -6,7 +6,7 @@ Things to do:
 + climb through windows
 + kill order
 + win/lose scenario
++ car
 
-- car
 - scenery
 - sound/music

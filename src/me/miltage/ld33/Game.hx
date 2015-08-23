@@ -19,6 +19,7 @@ class Game extends Sprite {
 	public static var instance:Game;
 	public static var started:Bool = false;
 	public static var finished:Bool = false;
+	public static var runCounter:Int = 0;
 
 	public var entities:Array<Entity>;
 	public var teens:Array<Teen>;
@@ -38,6 +39,7 @@ class Game extends Sprite {
 	var keys:KeyObject;
 	var ui:BitmapData;
 	var car:Car;
+	var roof:Bitmap;
 
 	var worldBBs:Array<BB>;
 
@@ -96,7 +98,6 @@ class Game extends Sprite {
 		addChild(new Bitmap(bmd));
 		ui = Assets.getBitmapData("assets/ui.png");
 
-		loadChars();
 		loadExtra();
 
 		addEventListener(Event.ENTER_FRAME, update);
@@ -111,10 +112,10 @@ class Game extends Sprite {
 		addChild(holder);
 
 		for(bb in getBBs(new BB(null, 0, 0, 400, 300))){
-			/*GraphicsUtil.drawLine(data, bb.x0, bb.y0, bb.x1, bb.y0, 0xffff0000);
+			GraphicsUtil.drawLine(data, bb.x0, bb.y0, bb.x1, bb.y0, 0xffff0000);
 			GraphicsUtil.drawLine(data, bb.x0, bb.y0, bb.x0, bb.y1, 0xffff0000);
 			GraphicsUtil.drawLine(data, bb.x0, bb.y1, bb.x1, bb.y1, 0xffff0000);
-			GraphicsUtil.drawLine(data, bb.x1, bb.y0, bb.x1, bb.y1, 0xffff0000);*/
+			GraphicsUtil.drawLine(data, bb.x1, bb.y0, bb.x1, bb.y1, 0xffff0000);
 		}
 		for(node in navMesh.nodes){
 			/*data.setPixel32(Std.int(node.x), Std.int(node.y), 0xffff0000);
@@ -127,9 +128,17 @@ class Game extends Sprite {
 		b = new Bitmap(hud);
 		addChild(b);
 
+		roof = new Bitmap(Assets.getBitmapData("assets/roof.png"));
+		addChild(roof);
+
 	}
 
 	public function update(e:Event){
+
+		if(Game.started) runCounter++;
+
+		if(runCounter == 300)
+			addKiller();
 
 		// sort
 		updateOrder();
@@ -143,36 +152,40 @@ class Game extends Sprite {
 			Main.instance.restart();
 		}
 
-		if(keys.isDown(KeyObject.RIGHT) || keys.isDown(KeyObject.D))
-			killer.move(2, 0);
-		if(keys.isDown(KeyObject.LEFT) || keys.isDown(KeyObject.A))
-			killer.move(-2, 0);
-		if(keys.isDown(KeyObject.UP) || keys.isDown(KeyObject.W))
-			killer.move(0, -2);
-		if(keys.isDown(KeyObject.DOWN) || keys.isDown(KeyObject.S))
-			killer.move(0, 2);
+		if(Game.finished) return;
 
-		if(keys.isDown(KeyObject.RIGHT) || keys.isDown(KeyObject.D) || keys.isDown(KeyObject.LEFT) || keys.isDown(KeyObject.A)
-			|| keys.isDown(KeyObject.UP) || keys.isDown(KeyObject.W) || keys.isDown(KeyObject.DOWN) || keys.isDown(KeyObject.S))
-			killer.moveCount++;
-		else
-			killer.moveCount = 0;
+		if(killer != null){
+			if(keys.isDown(KeyObject.RIGHT) || keys.isDown(KeyObject.D))
+				killer.move(2, 0);
+			if(keys.isDown(KeyObject.LEFT) || keys.isDown(KeyObject.A))
+				killer.move(-2, 0);
+			if(keys.isDown(KeyObject.UP) || keys.isDown(KeyObject.W))
+				killer.move(0, -2);
+			if(keys.isDown(KeyObject.DOWN) || keys.isDown(KeyObject.S))
+				killer.move(0, 2);
 
-		if(keys.isDown(KeyObject.X)){
-			killer.slash();
-		}
+			if(keys.isDown(KeyObject.RIGHT) || keys.isDown(KeyObject.D) || keys.isDown(KeyObject.LEFT) || keys.isDown(KeyObject.A)
+				|| keys.isDown(KeyObject.UP) || keys.isDown(KeyObject.W) || keys.isDown(KeyObject.DOWN) || keys.isDown(KeyObject.S))
+				killer.moveCount++;
+			else
+				killer.moveCount = 0;
 
-		if(keys.isDown(KeyObject.C)){
-			if(killer.canHide() && killer.hideDelay == 0){
-				killer.hiding = !killer.hiding;
-				killer.hideDelay = 10;
+			if(keys.isDown(KeyObject.X)){
+				killer.slash();
 			}
-			else if(killer.canWindow() && killer.hideDelay == 0){
-				var d = killer.pos.sub(windows[0]);
-				if(d.y > 0 && d.y < 8) d.y = 8;
-				killer.pos.y += d.y*-2;
-				killer.hideDelay = 10;
-				updateOrder();
+
+			if(keys.isDown(KeyObject.C)){
+				if(killer.canHide() && killer.hideDelay == 0){
+					killer.hiding = !killer.hiding;
+					killer.hideDelay = 10;
+				}
+				else if(killer.canWindow() && killer.hideDelay == 0){
+					var d = killer.pos.sub(windows[0]);
+					if(d.y > 0 && d.y < 8) d.y = 8;
+					killer.pos.y += d.y*-2;
+					killer.hideDelay = 10;
+					updateOrder();
+				}
 			}
 		}
 
@@ -192,6 +205,7 @@ class Game extends Sprite {
 		data.fillRect(data.rect, 0x00000000);
 
 		for(teen in teens){
+			if(killer == null) break;
 			if(teen.state == Teen.SCARED) break;
 			if(LOS.canSee(teen.pos, killer.pos, 1) && teen.facing.dot(killer.pos.sub(teen.pos)) > 0.7 && !killer.hiding){
 				GraphicsUtil.drawStaggeredLine(data, killer.pos.x, killer.pos.y, teen.pos.x, teen.pos.y, 0xffff0000);
@@ -208,6 +222,8 @@ class Game extends Sprite {
 		for(i in 0...order.length){
 			hud.copyPixels(ui, new Rectangle(order[i].portrait*16, 32+(order[i].health>0?0:16), 16, 16), new Point(i*16+5, Std.int(Lib.application.window.height/Main.scale)-21));
 		}
+
+		if(runCounter > 150) roof.alpha -= 0.015;
 	}
 
 	private function updateOrder(){		
@@ -240,8 +256,8 @@ class Game extends Sprite {
 		return list;
 	}
 
-	private function loadChars(){
-		killer = new Killer(this, 80, 180);
+	private function addKiller(){
+		killer = new Killer(this, 130, 250);
 		entities.push(killer);
 		holder.addChild(killer);
 	}
@@ -348,25 +364,25 @@ class Game extends Sprite {
 	}
 
 	public function addTeens(){
-		var t0 = new Teen(this, 165, 267, "token");
+		var t0 = new Teen(this, 165, 277, "token");
 		t0.portrait = 0;
 		entities.push(t0);
 		teens.push(t0);
 		holder.addChild(t0);
 
-		var t1 = new Teen(this, 170, 250, "todd");
+		var t1 = new Teen(this, 170, 260, "todd");
 		t1.portrait = 1;
 		entities.push(t1);
 		teens.push(t1);
 		holder.addChild(t1);
 
-		var t2 = new Teen(this, 170, 267, "roxanne");
+		var t2 = new Teen(this, 170, 277, "roxanne");
 		t2.portrait = 2;
 		entities.push(t2);
 		teens.push(t2);
 		holder.addChild(t2);
 
-		var t3 = new Teen(this, 165, 250, "jessica");
+		var t3 = new Teen(this, 165, 260, "jessica");
 		t3.portrait = 3;
 		entities.push(t3);
 		teens.push(t3);

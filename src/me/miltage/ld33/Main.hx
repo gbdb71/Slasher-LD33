@@ -56,10 +56,12 @@ class Main extends Sprite {
 		removeChild(game);
 		Game.started = false;
 		Game.finished = false;
+		Game.runCounter = 0;
 		game.dump();
 		game = new Game();
 		game.scaleX = game.scaleY = scale;
 		addChildAt(game, 0);
+		Game.started = true;
 	}
 	
 	
