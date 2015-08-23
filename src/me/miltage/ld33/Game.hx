@@ -6,6 +6,8 @@ import openfl.Lib;
 import openfl.display.BitmapData;
 import openfl.events.Event;
 import openfl.Assets;
+import openfl.geom.Rectangle;
+import openfl.geom.Point;
 
 import me.miltage.ld33.math.BB;
 import me.miltage.ld33.math.Vec2;
@@ -22,14 +24,17 @@ class Game extends Sprite {
 	public var blood:Array<Blood>;
 	public var hidingPlaces:Array<Vec2>;
 	public var windows:Array<Vec2>;
+	public var order:Array<Teen>;
 	public var navMesh:NavMesh;
 
 	var bg:BitmapData;
 	var data:BitmapData;
 	var effect:BitmapData;
+	var hud:BitmapData;
 	var holder:Sprite;
 
 	var keys:KeyObject;
+	var ui:BitmapData;
 
 	var worldBBs:Array<BB>;
 
@@ -45,6 +50,7 @@ class Game extends Sprite {
 		blood = [];
 		hidingPlaces = [];
 		windows = [];
+		order = [];
 
 		keys = new KeyObject(Lib.current.stage);
 		holder = new Sprite();
@@ -85,6 +91,7 @@ class Game extends Sprite {
 
 		var bmd = Assets.getBitmapData("assets/cabin_floor.png");
 		addChild(new Bitmap(bmd));
+		ui = Assets.getBitmapData("assets/ui.png");
 
 		loadChars();
 		loadExtra();
@@ -111,6 +118,11 @@ class Game extends Sprite {
 			for(n in node.neighbours)
 				GraphicsUtil.drawLine(data, node.x, node.y, n.x, n.y, 0xffff0000);*/
 		}
+
+
+		hud = new BitmapData(Std.int(Lib.application.window.width/Main.scale), Std.int(Lib.application.window.height/Main.scale), true, 0x00000000);
+		b = new Bitmap(hud);
+		addChild(b);
 
 	}
 
@@ -181,8 +193,10 @@ class Game extends Sprite {
 			}
 		}
 
-		
-
+		// hud elements
+		for(i in 0...order.length){
+			hud.copyPixels(ui, new Rectangle(order[i].portrait*16, 32+(order[i].health>0?0:16), 16, 16), new Point(i*16+5, Std.int(Lib.application.window.height/Main.scale)-21));
+		}
 	}
 
 	private function updateOrder(){		
@@ -221,24 +235,37 @@ class Game extends Sprite {
 		holder.addChild(killer);
 
 		var t0 = new Teen(this, 220, 180, "token");
+		t0.portrait = 0;
 		entities.push(t0);
 		teens.push(t0);
 		holder.addChild(t0);
 
 		var t1 = new Teen(this, 220, 180, "todd");
+		t1.portrait = 1;
 		entities.push(t1);
 		teens.push(t1);
 		holder.addChild(t1);
 
 		var t2 = new Teen(this, 220, 180, "roxanne");
+		t2.portrait = 2;
 		entities.push(t2);
 		teens.push(t2);
 		holder.addChild(t2);
 
 		var t3 = new Teen(this, 220, 180, "jessica");
+		t3.portrait = 3;
 		entities.push(t3);
 		teens.push(t3);
 		holder.addChild(t3);
+
+		order.push(t1);
+		order.push(t2);
+		order.push(t3);
+		order.sort( function(a:Teen, b:Teen):Int
+			{
+			    return Std.int(Math.round(Math.random()*2-1));
+			} );
+		order.insert(0, t0);
 	}
 
 	private function loadExtra(){

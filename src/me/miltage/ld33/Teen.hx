@@ -35,6 +35,7 @@ class Teen extends Entity {
 	public var state:Int;
 	public var suspTime:Int;
 	public var health:Int;
+	public var portrait:Int;
 
 	public function new(game, x, y, char){
 		super(game, x, y, 32, 32);
