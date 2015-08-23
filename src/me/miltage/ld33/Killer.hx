@@ -55,9 +55,11 @@ class Killer extends Entity {
 				if(pos.dist(teen.pos) < 20 && teen.health > 0){
 					teen.health--;
 					teen.setState(Teen.SCARED);
+					if(teen.health <= 0) teen.thought = "";
+					for(i in 0...10)
+					Game.instance.addBlood(new Blood(teen.pos.x, teen.pos.y, Math.random()*2-1));
 				}
 
-				if(teen.health <= 0) teen.thought = "";
 			}
 		}
 	}

@@ -129,7 +129,7 @@ class Game extends Sprite {
 				blood.remove(b);
 				entities.remove(b);
 				holder.removeChild(b);
-				GraphicsUtil.drawCircle(effect, b.x, b.y, 1, 0xffcc0000, true);
+				GraphicsUtil.drawCircle(effect, b.x, b.y, Std.int(Math.random()*2), 0xffcc0000, true);
 			}
 		}
 
