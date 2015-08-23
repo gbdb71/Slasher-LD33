@@ -14,7 +14,7 @@ class Rain {
 		y += 8;
 		x -= 3;
 
-		if(y > 400) y = -50-Std.int(Math.random()*100);
+		if(y > 400) y = -100-Std.int(Math.random()*500);
 		if(x < -50) x = Std.int(Math.random()*600);
 	}
 }

@@ -7,6 +7,6 @@ Things to do:
 + kill order
 + win/lose scenario
 + car
++ scenery
 
-- scenery
 - sound/music
