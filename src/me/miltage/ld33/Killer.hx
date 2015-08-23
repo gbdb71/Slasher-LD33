@@ -18,6 +18,11 @@ class Killer extends Entity {
 	override public function update(){
 		super.update();
 
+		for(teen in Game.instance.teens){
+			if(pos.dist(teen.pos) < 50)
+				teen.setState(Teen.SUSPICIOUS);
+		}
+
 	}
 
 	override private function render(){

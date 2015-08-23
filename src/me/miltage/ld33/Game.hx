@@ -16,6 +16,7 @@ class Game extends Sprite {
 	public static var instance:Game;
 
 	public var entities:Array<Entity>;
+	public var teens:Array<Teen>;
 	public var extras:Array<Entity>;
 	public var navMesh:NavMesh;
 
@@ -34,6 +35,7 @@ class Game extends Sprite {
 
 		entities = [];
 		extras = [];
+		teens = [];
 
 		keys = new KeyObject(Lib.current.stage);
 
@@ -153,24 +155,28 @@ class Game extends Sprite {
 	}
 
 	private function loadChars(){
-		killer = new Killer(this, 200, 200);
+		killer = new Killer(this, 200, 280);
 		entities.push(killer);
 		addChild(killer);
 
 		var t0 = new Teen(this, 220, 180, "token");
 		entities.push(t0);
+		teens.push(t0);
 		addChild(t0);
 
 		var t1 = new Teen(this, 220, 180, "todd");
 		entities.push(t1);
+		teens.push(t1);
 		addChild(t1);
 
 		var t2 = new Teen(this, 220, 180, "roxanne");
 		entities.push(t2);
+		teens.push(t2);
 		addChild(t2);
 
 		var t3 = new Teen(this, 220, 180, "jessica");
 		entities.push(t3);
+		teens.push(t3);
 		addChild(t3);
 	}
 
