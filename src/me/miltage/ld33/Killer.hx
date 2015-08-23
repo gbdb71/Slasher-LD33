@@ -46,6 +46,12 @@ class Killer extends Entity {
 				letter.visible = true;
 		}
 
+		for(w in Game.instance.windows){
+			if(pos.dist(w) < 20)
+				letter.visible = true;
+		}
+
+
 		if(hideDelay > 0) hideDelay--;
 
 	}
@@ -101,7 +107,15 @@ class Killer extends Entity {
 
 	public function canHide():Bool {
 		for(hp in Game.instance.hidingPlaces){
-			if(pos.dist(hp) < 40)
+			if(pos.dist(hp) < 20)
+				return true;
+		}
+		return false;
+	}
+
+	public function canWindow():Bool {
+		for(w in Game.instance.windows){
+			if(pos.dist(w) < 20)
 				return true;
 		}
 		return false;

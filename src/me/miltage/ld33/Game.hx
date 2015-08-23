@@ -21,6 +21,7 @@ class Game extends Sprite {
 	public var extras:Array<Entity>;
 	public var blood:Array<Blood>;
 	public var hidingPlaces:Array<Vec2>;
+	public var windows:Array<Vec2>;
 	public var navMesh:NavMesh;
 
 	var bg:BitmapData;
@@ -43,6 +44,7 @@ class Game extends Sprite {
 		teens = [];
 		blood = [];
 		hidingPlaces = [];
+		windows = [];
 
 		keys = new KeyObject(Lib.current.stage);
 		holder = new Sprite();
@@ -113,29 +115,8 @@ class Game extends Sprite {
 	}
 
 	public function update(e:Event){
-		// sort
-		for(i in 0...entities.length-1){
-			if(entities[i].y+entities[i].register > entities[i+1].y+entities[i+1].register){
-				var t = entities[i];
-				entities[i] = entities[i+1];
-				entities[i+1] = t;
-				holder.swapChildren(entities[i], entities[i+1]);
-			}
-		}
 
-		for(e in entities)
-			e.update();
-
-		for(b in blood){
-			b.update();
-			if(b.remove){
-				blood.remove(b);
-				entities.remove(b);
-				holder.removeChild(b);
-				GraphicsUtil.drawCircle(effect, b.x, b.y, Std.int(Math.random()*2), 0xffcc0000, true);
-			}
-		}
-
+		// input
 		if(keys.isDown(KeyObject.RIGHT) || keys.isDown(KeyObject.D))
 			killer.move(2, 0);
 		if(keys.isDown(KeyObject.LEFT) || keys.isDown(KeyObject.A))
@@ -160,8 +141,30 @@ class Game extends Sprite {
 				killer.hiding = !killer.hiding;
 				killer.hideDelay = 10;
 			}
+			else if(killer.canWindow() && killer.hideDelay == 0){
+				var d = killer.pos.sub(windows[0]);
+				if(d.y > 0 && d.y < 8) d.y = 8;
+				killer.pos.y += d.y*-2;
+				killer.hideDelay = 10;
+				updateOrder();
+			}
 		}
 
+		// sort
+		updateOrder();
+
+		for(e in entities)
+			e.update();
+
+		for(b in blood){
+			b.update();
+			if(b.remove){
+				blood.remove(b);
+				entities.remove(b);
+				holder.removeChild(b);
+				GraphicsUtil.drawCircle(effect, b.x, b.y, Std.int(Math.random()*2), 0xffcc0000, true);
+			}
+		}
 
 		data.fillRect(data.rect, 0x00000000);
 
@@ -180,6 +183,17 @@ class Game extends Sprite {
 
 		
 
+	}
+
+	private function updateOrder(){		
+		for(i in 0...entities.length-1){
+			if(entities[i].y+entities[i].register > entities[i+1].y+entities[i+1].register){
+				var t = entities[i];
+				entities[i] = entities[i+1];
+				entities[i+1] = t;
+				holder.swapChildren(entities[i], entities[i+1]);
+			}
+		}
 	}
 
 	public function getBBs(bounds:BB, includeFurni:Bool=false):Array<BB> {
@@ -318,6 +332,9 @@ class Game extends Sprite {
 		hidingPlaces.push(new Vec2(112, 75));
 		hidingPlaces.push(new Vec2(112, 200));
 		hidingPlaces.push(new Vec2(310, 75));
+
+		windows.push(new Vec2(145, 68));
+		windows.push(new Vec2(222, 67));
 	}
 
 	public function addBlood(b:Blood){

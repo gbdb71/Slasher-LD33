@@ -2,8 +2,8 @@ Things to do:
 
 + hacking/slashing
 + blood!
++ hiding
++ climb through windows
 
-- hiding
-- climb through windows
 - kill order
 - win/lose scenario
