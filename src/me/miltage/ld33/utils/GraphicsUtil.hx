@@ -2,9 +2,12 @@ package me.miltage.ld33.utils;
 
 class GraphicsUtil {
 	
-	public static function drawLine (bmd:openfl.display.BitmapData, x0:Float, y0:Float, x1:Float, y1:Float, color:Int) {
+	public static function drawLine (bmd:openfl.display.BitmapData, xx0:Float, yy0:Float, xx1:Float, yy1:Float, color:Int) {
 		// Bresenham's line drawing algorithm
-
+		var x0:Int = Std.int(xx0);
+		var x1:Int = Std.int(xx1);
+		var y0:Int = Std.int(yy0);
+		var y1:Int = Std.int(yy1);
 		var dx:Int = Std.int(x1-x0);
 		var dy:Int = Std.int(y1-y0);
 		var stepx:Int;

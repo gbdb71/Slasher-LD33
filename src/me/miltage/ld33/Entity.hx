@@ -21,6 +21,7 @@ class Entity extends Sprite implements BBOwner {
 	private var bmd:BitmapData;
 	private var yoffset:Int;
 	private var bounce:Float;
+	private var path:Array<Vec2>;
 
 	public function new(game, x, y, w, h){
 		super();
@@ -30,7 +31,8 @@ class Entity extends Sprite implements BBOwner {
 		this.h = h;
 		pos = new Vec2(x, y);
 		facing = new Vec2(0, 1);
-		target = new Vec2(10, 10);
+		bounce = 0;
+		path = new Array<Vec2>();
 
 		bmd = new BitmapData(w, h, true, 0x353d31);
 		var b = new Bitmap(bmd);
@@ -40,6 +42,10 @@ class Entity extends Sprite implements BBOwner {
 	}
 
 	public function update(){
+		if(path.length > 0 && target == null){
+			target = path.pop();
+		}
+
 		if(target != null){
 			var d = target.sub(pos);
 			bounce = Math.sin(d.length()/1.2)*2;
@@ -64,7 +70,7 @@ class Entity extends Sprite implements BBOwner {
 	}
 
 	public function move(xa:Float, ya:Float):Bool {
-		var bbs:Array<BB> = world.getBBs(this);
+		var bbs:Array<BB> = world.getBBs(getBB().grow(5));
 		var moved = false;
 		moved = partMove(bbs, xa, 0);
 		moved = partMove(bbs, 0, ya);
@@ -144,5 +150,9 @@ class Entity extends Sprite implements BBOwner {
 
 	public function setTarget(t:Vec2){
 		target = t;
+	}
+
+	public function findPath(p:Vec2){
+		path = Game.instance.navMesh.findPath(pos, p);
 	}
 }
