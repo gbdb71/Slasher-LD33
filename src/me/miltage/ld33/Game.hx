@@ -8,6 +8,7 @@ import openfl.events.Event;
 import openfl.Assets;
 
 import me.miltage.ld33.math.BB;
+import me.miltage.ld33.math.Vec2;
 import me.miltage.ld33.utils.KeyObject;
 import me.miltage.ld33.utils.GraphicsUtil;
 
@@ -19,6 +20,7 @@ class Game extends Sprite {
 	public var teens:Array<Teen>;
 	public var extras:Array<Entity>;
 	public var blood:Array<Blood>;
+	public var hidingPlaces:Array<Vec2>;
 	public var navMesh:NavMesh;
 
 	var bg:BitmapData;
@@ -40,6 +42,7 @@ class Game extends Sprite {
 		extras = [];
 		teens = [];
 		blood = [];
+		hidingPlaces = [];
 
 		keys = new KeyObject(Lib.current.stage);
 		holder = new Sprite();
@@ -152,12 +155,19 @@ class Game extends Sprite {
 			killer.slash();
 		}
 
+		if(keys.isDown(KeyObject.C)){
+			if(killer.canHide() && killer.hideDelay == 0){
+				killer.hiding = !killer.hiding;
+				killer.hideDelay = 10;
+			}
+		}
+
 
 		data.fillRect(data.rect, 0x00000000);
 
 		for(teen in teens){
 			if(teen.state == Teen.SCARED) break;
-			if(LOS.canSee(teen.pos, killer.pos, 1) && teen.facing.dot(killer.pos.sub(teen.pos)) > 0.7){
+			if(LOS.canSee(teen.pos, killer.pos, 1) && teen.facing.dot(killer.pos.sub(teen.pos)) > 0.7 && !killer.hiding){
 				GraphicsUtil.drawStaggeredLine(data, killer.pos.x, killer.pos.y, teen.pos.x, teen.pos.y, 0xffff0000);
 				teen.thought = "!";
 				teen.setState(Teen.SUSPICIOUS);
@@ -192,7 +202,7 @@ class Game extends Sprite {
 	}
 
 	private function loadChars(){
-		killer = new Killer(this, 200, 280);
+		killer = new Killer(this, 140, 180);
 		entities.push(killer);
 		holder.addChild(killer);
 
@@ -304,6 +314,10 @@ class Game extends Sprite {
 		entities.push(couch1);
 		extras.push(couch1);
 		holder.addChild(couch1);
+
+		hidingPlaces.push(new Vec2(112, 75));
+		hidingPlaces.push(new Vec2(112, 200));
+		hidingPlaces.push(new Vec2(310, 75));
 	}
 
 	public function addBlood(b:Blood){

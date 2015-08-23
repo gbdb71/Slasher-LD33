@@ -8,6 +8,7 @@ class KeyObject {
 
 	private static var stage:Stage;
 	private static var keysDown:Dynamic;
+	private static var nextStates:Dynamic;
 
 	public static var UP:UInt = Keyboard.UP;
 	public static var DOWN:UInt = Keyboard.DOWN;
@@ -33,7 +34,7 @@ class KeyObject {
 	}
 
 	public function isDown(keyCode:UInt):Bool {
-		return keysDown[keyCode]?keysDown[keyCode]:false;
+		return keysDown[keyCode];
 	}
 
 	private function keyPressed(evt:KeyboardEvent) {
