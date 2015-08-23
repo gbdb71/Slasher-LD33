@@ -18,10 +18,12 @@ class Game extends Sprite {
 	public var entities:Array<Entity>;
 	public var teens:Array<Teen>;
 	public var extras:Array<Entity>;
+	public var blood:Array<Blood>;
 	public var navMesh:NavMesh;
 
 	var bg:BitmapData;
 	var data:BitmapData;
+	var effect:BitmapData;
 	var holder:Sprite;
 
 	var keys:KeyObject;
@@ -37,6 +39,7 @@ class Game extends Sprite {
 		entities = [];
 		extras = [];
 		teens = [];
+		blood = [];
 
 		keys = new KeyObject(Lib.current.stage);
 		holder = new Sprite();
@@ -83,6 +86,10 @@ class Game extends Sprite {
 
 		addEventListener(Event.ENTER_FRAME, update);
 
+		effect = new BitmapData(Std.int(Lib.application.window.width/Main.scale), Std.int(Lib.application.window.height/Main.scale), true, 0x00000000);
+		b = new Bitmap(effect);
+		addChild(b);
+
 		data = new BitmapData(Std.int(Lib.application.window.width/Main.scale), Std.int(Lib.application.window.height/Main.scale), true, 0x00000000);
 		b = new Bitmap(data);
 		addChild(b);
@@ -116,6 +123,16 @@ class Game extends Sprite {
 		for(e in entities)
 			e.update();
 
+		for(b in blood){
+			b.update();
+			if(b.remove){
+				blood.remove(b);
+				entities.remove(b);
+				holder.removeChild(b);
+				GraphicsUtil.drawCircle(effect, b.x, b.y, 1, 0xffcc0000, true);
+			}
+		}
+
 		if(keys.isDown(KeyObject.RIGHT) || keys.isDown(KeyObject.D))
 			killer.move(2, 0);
 		if(keys.isDown(KeyObject.LEFT) || keys.isDown(KeyObject.A))
@@ -139,7 +156,7 @@ class Game extends Sprite {
 		data.fillRect(data.rect, 0x00000000);
 
 		for(teen in teens){
-			if(teen.state == Teen.SCARED) return;
+			if(teen.state == Teen.SCARED) break;
 			if(LOS.canSee(teen.pos, killer.pos, 1) && teen.facing.dot(killer.pos.sub(teen.pos)) > 0.7){
 				GraphicsUtil.drawStaggeredLine(data, killer.pos.x, killer.pos.y, teen.pos.x, teen.pos.y, 0xffff0000);
 				teen.thought = "!";
@@ -288,4 +305,11 @@ class Game extends Sprite {
 		extras.push(couch1);
 		holder.addChild(couch1);
 	}
+
+	public function addBlood(b:Blood){
+		blood.push(b);
+		entities.push(b);
+		holder.addChild(b);
+	}
+
 }

@@ -38,11 +38,11 @@ class Entity extends Sprite implements BBOwner {
 		register = 0;
 		path = new Array<Vec2>();
 
-		bmd = new BitmapData(w, h, true, 0x353d31);
-		var b = new Bitmap(bmd);
-		addChild(b);
-
-		bmd.fillRect(bmd.rect, 0xffffffff);
+		if(w > 0 && h > 0){
+			bmd = new BitmapData(w, h, true, 0x353d31);
+			var b = new Bitmap(bmd);
+			addChild(b);
+		}
 	}
 
 	public function update(){

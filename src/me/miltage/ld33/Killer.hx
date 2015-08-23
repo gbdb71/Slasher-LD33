@@ -43,13 +43,22 @@ class Killer extends Entity {
 	}
 
 	override public function getBB():BB {
-		return new BB(this, pos.x - 8, pos.y - 6, pos.x + 8, pos.y + 6);
+		return new BB(this, pos.x - 7, pos.y - 5, pos.x + 7, pos.y + 5);
 	}
 
 	public function slash(){
 		if(hackWait == 0){
 			hack = 1;
 			hackWait = 10;
+
+			for(teen in Game.instance.teens){
+				if(pos.dist(teen.pos) < 20 && teen.health > 0){
+					teen.health--;
+					teen.setState(Teen.SCARED);
+				}
+
+				if(teen.health <= 0) teen.thought = "";
+			}
 		}
 	}
 }

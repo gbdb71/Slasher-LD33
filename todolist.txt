@@ -1,7 +1,8 @@
 Things to do: 
 
-- hacking/slashing
-- blood!
++ hacking/slashing
++ blood!
+
 - hiding
 - climb through windows
 - kill order

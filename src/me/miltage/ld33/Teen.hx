@@ -29,10 +29,12 @@ class Teen extends Entity {
 	
 	var sheet:BitmapData;
 	var tx:TextField;
+	var frame:Int;
 
 	public var thought:String;
 	public var state:Int;
 	public var suspTime:Int;
+	public var health:Int;
 
 	public function new(game, x, y, char){
 		super(game, x, y, 32, 32);
@@ -40,6 +42,7 @@ class Teen extends Entity {
 		yoffset = 12;
 		thought = "";
 		state = HAPPY;
+		health = 3;
 
 		wait = Std.int(Math.random()*200);
 		thoughtTime = 200+Std.int(Math.random()*200);
@@ -58,6 +61,14 @@ class Teen extends Entity {
 	}
 
 	override public function update(){
+
+		tx.text = thought;
+
+		if(health <= 0){
+			render();
+			return;
+		}
+
 		super.update();
 
 		if(wait > 0 && state == HAPPY) wait--;
@@ -77,8 +88,6 @@ class Teen extends Entity {
 			}
 			findPath(t);
 		}
-
-		tx.text = thought;
 
 		if(thoughtTime > 0) thoughtTime--;
 		else {
@@ -111,11 +120,19 @@ class Teen extends Entity {
 			if(pos.dist(teen.pos) < 40 && teen.state == SCARED)
 				state = SCARED;
 		}
+
+		// bleeding hell!
+		if(health == 1){
+			Game.instance.addBlood(new Blood(pos.x+(frame==0||frame==3?5:0), pos.y+2-bounce, Math.random()/2-0.25));
+			Game.instance.addBlood(new Blood(pos.x+(frame==0||frame==3?-5:0), pos.y+2-bounce, Math.random()/2-0.25));
+		}else if(health == 2){				
+			Game.instance.addBlood(new Blood(pos.x+(frame==0?-5:(frame==3?5:0)), pos.y+2-bounce, Math.random()/2-0.25));
+		}
+		
 	}
 
 	override private function render(){
 		bmd.fillRect(bmd.rect, 0x00000000);
-		var frame:Int = 0;
 		var row:Int = 0;
 		if(Math.abs(facing.x) > Math.abs(facing.y)){
 			if(facing.x < 0) frame = 1;
@@ -125,6 +142,8 @@ class Teen extends Entity {
 			else frame = 0; // obsolete but idgaf, I like the structure
 		}
 		if(state == SCARED) row = 3;
+		if(health < 3) row = 4+(3-health);
+		if(health <= 0) frame = 0;
 		bmd.copyPixels(sheet, new openfl.geom.Rectangle(32*frame, 32*row, 32, 32), new openfl.geom.Point(0, 0));
 	}
 
