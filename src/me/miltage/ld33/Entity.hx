@@ -23,6 +23,7 @@ class Entity extends Sprite implements BBOwner {
 	private var bounce:Float;
 	private var path:Array<Vec2>;
 	public var moveCount:Int;
+	public var register:Int;
 
 	public function new(game, x, y, w, h){
 		super();
@@ -34,6 +35,7 @@ class Entity extends Sprite implements BBOwner {
 		facing = new Vec2(0, 1);
 		bounce = 0;
 		moveCount = 0;
+		register = 0;
 		path = new Array<Vec2>();
 
 		bmd = new BitmapData(w, h, true, 0x353d31);

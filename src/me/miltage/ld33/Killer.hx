@@ -34,6 +34,6 @@ class Killer extends Entity {
 	}
 
 	override public function getBB():BB {
-		return new BB(this, pos.x - 4, pos.y - 4, pos.x + 4, pos.y + 4);
+		return new BB(this, pos.x - 8, pos.y - 6, pos.x + 8, pos.y + 6);
 	}
 }
