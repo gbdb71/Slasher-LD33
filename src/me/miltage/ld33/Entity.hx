@@ -74,7 +74,7 @@ class Entity extends Sprite implements BBOwner {
 	}
 
 	public function move(xa:Float, ya:Float):Bool {
-		var bbs:Array<BB> = world.getBBs(getBB().grow(5));
+		var bbs:Array<BB> = world.getBBs(getBB().grow(5), true);
 		var moved = false;
 		moved = partMove(bbs, xa, 0);
 		moved = partMove(bbs, 0, ya);

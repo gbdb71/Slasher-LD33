@@ -5,6 +5,7 @@ import openfl.Assets;
 
 import me.miltage.ld33.math.Vec2;
 import me.miltage.ld33.math.BB;
+import me.miltage.ld33.utils.GraphicsUtil;
 
 class Killer extends Entity {
 
@@ -17,11 +18,6 @@ class Killer extends Entity {
 
 	override public function update(){
 		super.update();
-
-		for(teen in Game.instance.teens){
-			if(pos.dist(teen.pos) < 50)
-				teen.setState(Teen.SUSPICIOUS);
-		}
 
 	}
 

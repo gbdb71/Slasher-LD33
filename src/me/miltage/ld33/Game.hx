@@ -22,6 +22,7 @@ class Game extends Sprite {
 
 	var bg:BitmapData;
 	var data:BitmapData;
+	var holder:Sprite;
 
 	var keys:KeyObject;
 
@@ -38,6 +39,7 @@ class Game extends Sprite {
 		teens = [];
 
 		keys = new KeyObject(Lib.current.stage);
+		holder = new Sprite();
 
 		bg = new BitmapData(Std.int(Lib.application.window.width/Main.scale), Std.int(Lib.application.window.height/Main.scale), false, 0x353d31);
 		var b:Bitmap = new Bitmap(bg);
@@ -84,6 +86,7 @@ class Game extends Sprite {
 		data = new BitmapData(Std.int(Lib.application.window.width/Main.scale), Std.int(Lib.application.window.height/Main.scale), true, 0x00000000);
 		b = new Bitmap(data);
 		addChild(b);
+		addChild(holder);
 
 		for(bb in getBBs(new BB(null, 0, 0, 400, 300))){
 			/*GraphicsUtil.drawLine(data, bb.x0, bb.y0, bb.x1, bb.y0, 0xffff0000);
@@ -106,7 +109,7 @@ class Game extends Sprite {
 				var t = entities[i];
 				entities[i] = entities[i+1];
 				entities[i+1] = t;
-				this.swapChildren(entities[i], entities[i+1]);
+				holder.swapChildren(entities[i], entities[i+1]);
 			}
 		}
 
@@ -129,15 +132,26 @@ class Game extends Sprite {
 			killer.moveCount = 0;
 
 
-		//data.fillRect(data.rect, 0x00000000);
+		data.fillRect(data.rect, 0x00000000);
 
-		if(LOS.canSee(entities[0].pos, entities[1].pos, 1)){
-			//GraphicsUtil.drawLine(data, entities[0].pos.x, entities[0].pos.y, entities[1].pos.x, entities[1].pos.y, 0xffff0000);
+		for(teen in teens){
+			if(teen.state == Teen.SCARED) return;
+			if(LOS.canSee(teen.pos, killer.pos, 1) && teen.facing.dot(killer.pos.sub(teen.pos)) > 0.7){
+				GraphicsUtil.drawStaggeredLine(data, killer.pos.x, killer.pos.y, teen.pos.x, teen.pos.y, 0xffff0000);
+				teen.thought = "!";
+				teen.setState(Teen.SUSPICIOUS);
+				if(teen.suspTime < 100) teen.suspTime = 200;
+				teen.suspTime+=2;
+			}else if(teen.thought == "!"){
+				teen.thought = "";
+			}
 		}
+
+		
 
 	}
 
-	public function getBBs(bounds:BB):Array<BB> {
+	public function getBBs(bounds:BB, includeFurni:Bool=false):Array<BB> {
 		var list:Array<BB> = new Array<BB>();
 		bounds = bounds.grow(5);		
 
@@ -145,6 +159,8 @@ class Game extends Sprite {
 			if(bounds.intersectsBB(bb))
 				list.push(bb);
 		}
+
+		if(!includeFurni) return list;
 
 		for(e in extras){
 			if(bounds.intersectsBB(e.getBB()))
@@ -157,115 +173,115 @@ class Game extends Sprite {
 	private function loadChars(){
 		killer = new Killer(this, 200, 280);
 		entities.push(killer);
-		addChild(killer);
+		holder.addChild(killer);
 
 		var t0 = new Teen(this, 220, 180, "token");
 		entities.push(t0);
 		teens.push(t0);
-		addChild(t0);
+		holder.addChild(t0);
 
 		var t1 = new Teen(this, 220, 180, "todd");
 		entities.push(t1);
 		teens.push(t1);
-		addChild(t1);
+		holder.addChild(t1);
 
 		var t2 = new Teen(this, 220, 180, "roxanne");
 		entities.push(t2);
 		teens.push(t2);
-		addChild(t2);
+		holder.addChild(t2);
 
 		var t3 = new Teen(this, 220, 180, "jessica");
 		entities.push(t3);
 		teens.push(t3);
-		addChild(t3);
+		holder.addChild(t3);
 	}
 
 	private function loadExtra(){
 		var walls = new Extra(this, 0, 0, 400, 300, "cabin_walls");
 		walls.register = 40;
 		entities.push(walls);
-		addChild(walls);
+		holder.addChild(walls);
 
 		var deer = new Extra(this, 162, 32, 24, 32, "furniture", 70, 0);
 		deer.register = 11;
 		entities.push(deer);
-		addChild(deer);
+		holder.addChild(deer);
 
 		var shower = new Extra(this, 188, 32, 24, 64, "furniture", 95, 0);
 		shower.register = 11;
 		shower.bb = new BB(shower, 193, 69, 208, 79);
 		entities.push(shower);
 		extras.push(shower);
-		addChild(shower);
+		holder.addChild(shower);
 
 		var toilet = new Extra(this, 218, 32, 24, 64, "furniture", 125, 0);
 		toilet.register = 11;
 		toilet.bb = new BB(toilet, 230, 68, 239, 77);
 		entities.push(toilet);
 		extras.push(toilet);
-		addChild(toilet);
+		holder.addChild(toilet);
 
 		var kitchen = new Extra(this, 247, 32, 78, 64, "furniture", 155, 0);
 		kitchen.register = 11;
 		kitchen.bb = new BB(kitchen, 247, 67, 318, 78);
 		entities.push(kitchen);
 		extras.push(kitchen);
-		addChild(kitchen);
+		holder.addChild(kitchen);
 
 		var wardrobe = new Extra(this, 92, 32, 48, 64, "furniture", 0, 0);
 		wardrobe.register = 11;		
 		wardrobe.bb = new BB(wardrobe, 97, 70, 124, 78);
 		entities.push(wardrobe);
 		extras.push(wardrobe);
-		addChild(wardrobe);
+		holder.addChild(wardrobe);
 
 		var bed = new Extra(this, 116, 104, 48, 32, "furniture", 24, 72);
 		bed.register = 5;		
 		bed.bb = new BB(bed, 119, 125, 155, 132);
 		entities.push(bed);
 		extras.push(bed);
-		addChild(bed);
+		holder.addChild(bed);
 
 		var bed2 = new Extra(this, 95, 125, 48, 32, "furniture", 24, 72);
 		bed2.register = 3;
 		bed2.bb = new BB(bed2, 98, 140, 133, 152);
 		entities.push(bed2);
 		extras.push(bed2);
-		addChild(bed2);
+		holder.addChild(bed2);
 
 		var wardrobe2 = new Extra(this, 92, 162, 48, 64, "furniture", 0, 130);
 		wardrobe2.register = 18;
 		wardrobe2.bb = new BB(wardrobe2, 97, 200, 123, 209);
 		entities.push(wardrobe2);
 		extras.push(wardrobe2);
-		addChild(wardrobe2);
+		holder.addChild(wardrobe2);
 
 		var tv = new Extra(this, 172, 100, 48, 36, "furniture", 80, 70);
 		tv.register = 5;		
 		tv.bb = new BB(tv, 193, 121, 211, 133);
 		entities.push(tv);
 		extras.push(tv);
-		addChild(tv);
+		holder.addChild(tv);
 
 		var record = new Extra(this, 172, 186, 48, 36, "furniture", 80, 154);
 		record.register = 5;
 		record.bb = new BB(record, 194, 200, 207, 209);
 		entities.push(record);
 		extras.push(record);
-		addChild(record);
+		holder.addChild(record);
 
 		var couch = new Extra(this, 220, 100, 48, 36, "furniture", 125, 70);
 		couch.register = 5;
 		couch.bb = new BB(couch, 233, 123, 264, 135);
 		entities.push(couch);
 		extras.push(couch);
-		addChild(couch);
+		holder.addChild(couch);
 
 		var couch1 = new Extra(this, 260, 142, 48, 48, "furniture", 170, 111);
 		couch1.register = 5;
 		couch1.bb = new BB(couch1, 270, 153, 284, 180);
 		entities.push(couch1);
 		extras.push(couch1);
-		addChild(couch1);
+		holder.addChild(couch1);
 	}
 }

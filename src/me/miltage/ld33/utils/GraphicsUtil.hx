@@ -45,6 +45,53 @@ class GraphicsUtil {
 		}
 		
 	}	
+
+	public static function drawStaggeredLine (bmd:openfl.display.BitmapData, xx0:Float, yy0:Float, xx1:Float, yy1:Float, color:Int) {
+		// Bresenham's line drawing algorithm
+		var x0:Int = Std.int(xx0);
+		var x1:Int = Std.int(xx1);
+		var y0:Int = Std.int(yy0);
+		var y1:Int = Std.int(yy1);
+		var dx:Int = Std.int(x1-x0);
+		var dy:Int = Std.int(y1-y0);
+		var stepx:Int;
+		var stepy:Int;
+		var c:Int = 0;
+	
+		if (dx<0) { dx*=-1; stepx=-1; } else { stepx=1; }
+		if (dy<0) { dy*=-1; stepy=-1; } else { stepy=1; }
+		
+		dy <<= 1; // *= 2;
+		dx <<= 1;
+		
+		bmd.setPixel32(Std.int(x0), Std.int(y0), color);
+		if (dx > dy) {
+			var fraction:Float = dy - (dx >> 1);
+			while (x0 != x1) {
+				if (fraction >= 0) {
+					y0 += stepy;
+					fraction -= dx;
+				}
+				x0 += stepx;
+				fraction += dy;
+				if(c % 2 == 0) bmd.setPixel32(Std.int(x0), Std.int(y0), color);
+				c++;
+			}
+		} else {
+			var fraction:Float = dx - (dy >> 1);
+			while (y0 != y1) {
+				if (fraction >= 0) {
+					x0 += stepx;
+					fraction -= dy;
+				}
+				y0 += stepy;
+				fraction += dx;
+				if(c % 2 == 0) bmd.setPixel32(Std.int(x0), Std.int(y0), color);
+				c++;
+			}
+		}
+		
+	}	
 	
 	public static function drawCircle (bmd:flash.display.BitmapData, xCenter:Float, yCenter:Float, r:Float, color:Int, ?fill:Bool=false, ?scaleY:Float=1):Void {
 		

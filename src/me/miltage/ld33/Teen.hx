@@ -17,10 +17,11 @@ class Teen extends Entity {
 	public static var SUSPICIOUS:Int = 1;
 	public static var SCARED:Int = 2;
 
-	public static var happyThoughts:Array<String> = ["Woohoo!", "Party time!", ":D", "Haha", "Hahaha!", "Who wants to get drunk?", "Let's let our guard down.", "Definitely nothing bad happening tonight.",
-														"This weekend is going to be amazing!"];
+	public static var happyThoughts:Array<String> = ["Woohoo!", "Party time!", ":D", "Haha", "Hahaha!", "Good idea!", "Who wants to get drunk?", "I'm going to let my guard down.", "Definitely nothing bad happening tonight.",
+														"This weekend is going to be amazing!", "College rules!", "I can't wait to live a long and fulfilling life."];
 	public static var suspiciousThoughts:Array<String> = ["What was that?", "D:", "Did you hear something?", "Did you hear that?", "Did you see that?", "???"];
-	public static var scaredThoughts:Array<String> = ["WTF?!", "holy shit", "help!", "let's gtfo!", "omg", "dafuq!", "run!"];
+	public static var scaredThoughts:Array<String> = ["WTF?!", "are you serious?", "holy shit", "help!", "let's gtfo!", "omg", "dafuq!", "run!"];
+	public static var reliefThoughts:Array<String> = ["Guess it was nothing...", "Just my imagination...", "I must be hearing things...", "I must be seeing things...", "I'm being silly..."];
 
 	var wait:Int;
 	var thoughtTime:Int;
@@ -30,6 +31,7 @@ class Teen extends Entity {
 
 	public var thought:String;
 	public var state:Int;
+	public var suspTime:Int;
 
 	public function new(game, x, y, char){
 		super(game, x, y, 32, 32);
@@ -46,6 +48,7 @@ class Teen extends Entity {
 
 		tx = new TextField();
 		tx.defaultTextFormat = format;
+		tx.selectable = false;
 		tx.y = -10;
 		tx.x = -384;
 		tx.width = 800;
@@ -56,16 +59,16 @@ class Teen extends Entity {
 	override public function update(){
 		super.update();
 
-		if(wait > 0) wait--;
-		else {
-			wait = 200+Std.int(Math.random()*200);
+		if(wait > 0 && state == HAPPY) wait--;
+		else if(state == HAPPY || state == SCARED) {
+			if(state == HAPPY) wait = 200+Std.int(Math.random()*200);
 			var valid = false;
 			var t = null;
 			while(!valid){
 				t = new Vec2(95+Math.random()*220, 70+Math.random()*130);
 				var tbb = new BB(null, t.x-10, t.y-10, t.x+10, t.y+10);
 				valid = true;
-				var bbs = Game.instance.getBBs(tbb);
+				var bbs = Game.instance.getBBs(tbb, true);
 				for(bb in bbs){
 					if(bb.intersectsBB(tbb))
 						valid = false;
@@ -80,7 +83,7 @@ class Teen extends Entity {
 		else {
 			if(state == HAPPY) thoughtTime = 200+Std.int(Math.random()*200);
 			else thoughtTime = Std.int(Math.random()*50);
-			
+
 			if(thought.length > 0) thought = "";
 			else {
 				if(state == HAPPY) thought = happyThoughts[Std.int(Math.random()*happyThoughts.length)];
@@ -90,11 +93,29 @@ class Teen extends Entity {
 				thoughtTime = 100;
 			}
 		}
+
+		if(state == SUSPICIOUS && suspTime > 0) suspTime--;
+		else if(state == SUSPICIOUS && suspTime <= 0){
+			state = HAPPY;
+			thought = reliefThoughts[Std.int(Math.random()*reliefThoughts.length)];
+			thoughtTime = 100;
+		}
+
+		if(state == SUSPICIOUS && suspTime > 225){
+			state = SCARED;
+		}
+
+		// infectious
+		for(teen in Game.instance.teens){
+			if(pos.dist(teen.pos) < 40 && teen.state == SCARED)
+				state = SCARED;
+		}
 	}
 
 	override private function render(){
 		bmd.fillRect(bmd.rect, 0x00000000);
 		var frame:Int = 0;
+		var row:Int = 0;
 		if(Math.abs(facing.x) > Math.abs(facing.y)){
 			if(facing.x < 0) frame = 1;
 			else frame = 2;
@@ -102,13 +123,18 @@ class Teen extends Entity {
 			if(facing.y < 0) frame = 3;
 			else frame = 0; // obsolete but idgaf, I like the structure
 		}
-		bmd.copyPixels(sheet, new openfl.geom.Rectangle(32*frame, 0, 32, 32), new openfl.geom.Point(0, 0));
+		if(state == SCARED) row = 3;
+		bmd.copyPixels(sheet, new openfl.geom.Rectangle(32*frame, 32*row, 32, 32), new openfl.geom.Point(0, 0));
 	}
 
 	public function setState(state){
 		if(this.state == state) return;
 
 		this.state = state;
+		if(state == SUSPICIOUS){
+			path = [];
+			target = null;
+		}
 
 		thoughtTime = 0;
 	}
