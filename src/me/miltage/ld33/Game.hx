@@ -37,6 +37,7 @@ class Game extends Sprite {
 
 	var keys:KeyObject;
 	var ui:BitmapData;
+	var car:Car;
 
 	var worldBBs:Array<BB>;
 
@@ -243,42 +244,14 @@ class Game extends Sprite {
 		killer = new Killer(this, 80, 180);
 		entities.push(killer);
 		holder.addChild(killer);
-
-		var t0 = new Teen(this, 220, 180, "token");
-		t0.portrait = 0;
-		entities.push(t0);
-		teens.push(t0);
-		holder.addChild(t0);
-
-		var t1 = new Teen(this, 220, 180, "todd");
-		t1.portrait = 1;
-		entities.push(t1);
-		teens.push(t1);
-		holder.addChild(t1);
-
-		var t2 = new Teen(this, 220, 180, "roxanne");
-		t2.portrait = 2;
-		entities.push(t2);
-		teens.push(t2);
-		holder.addChild(t2);
-
-		var t3 = new Teen(this, 220, 180, "jessica");
-		t3.portrait = 3;
-		entities.push(t3);
-		teens.push(t3);
-		holder.addChild(t3);
-
-		order.push(t1);
-		order.push(t2);
-		order.push(t3);
-		order.sort( function(a:Teen, b:Teen):Int
-			{
-			    return Std.int(Math.round(Math.random()*2-1));
-			} );
-		order.insert(0, t0);
 	}
 
 	private function loadExtra(){
+		car = new Car();
+		entities.push(car);
+		extras.push(car);
+		holder.addChild(car);
+
 		var walls = new Extra(this, 0, 0, 400, 300, "cabin_walls");
 		walls.register = 40;
 		entities.push(walls);
@@ -372,6 +345,41 @@ class Game extends Sprite {
 
 		windows.push(new Vec2(145, 68));
 		windows.push(new Vec2(222, 67));
+	}
+
+	public function addTeens(){
+		var t0 = new Teen(this, 165, 267, "token");
+		t0.portrait = 0;
+		entities.push(t0);
+		teens.push(t0);
+		holder.addChild(t0);
+
+		var t1 = new Teen(this, 170, 250, "todd");
+		t1.portrait = 1;
+		entities.push(t1);
+		teens.push(t1);
+		holder.addChild(t1);
+
+		var t2 = new Teen(this, 170, 267, "roxanne");
+		t2.portrait = 2;
+		entities.push(t2);
+		teens.push(t2);
+		holder.addChild(t2);
+
+		var t3 = new Teen(this, 165, 250, "jessica");
+		t3.portrait = 3;
+		entities.push(t3);
+		teens.push(t3);
+		holder.addChild(t3);
+
+		order.push(t1);
+		order.push(t2);
+		order.push(t3);
+		order.sort( function(a:Teen, b:Teen):Int
+			{
+			    return Std.int(Math.round(Math.random()*2-1));
+			} );
+		order.insert(0, t0);
 	}
 
 	public function addBlood(b:Blood){

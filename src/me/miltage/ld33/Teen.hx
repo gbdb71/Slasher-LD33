@@ -47,7 +47,7 @@ class Teen extends Entity {
 		state = HAPPY;
 		health = 3;
 
-		wait = Std.int(Math.random()*200);
+		wait = Std.int(Math.random()*35);
 		thoughtTime = 200+Std.int(Math.random()*200);
 
 		var format = new TextFormat ("04b03", 8, 0xffffff);
