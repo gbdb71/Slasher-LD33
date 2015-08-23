@@ -17,10 +17,11 @@ class Teen extends Entity {
 	public static var SUSPICIOUS:Int = 1;
 	public static var SCARED:Int = 2;
 
-	public static var happyThoughts:Array<String> = ["Woohoo!", "Party time!", ":D", "Haha", "Hahaha!", "Good idea!", "Who wants to get drunk?", "I'm going to let my guard down.", "Definitely nothing bad happening tonight.",
-														"This weekend is going to be amazing!", "College rules!", "I can't wait to live a long and fulfilling life."];
-	public static var suspiciousThoughts:Array<String> = ["What was that?", "D:", "Did you hear something?", "Did you hear that?", "Did you see that?", "???"];
-	public static var scaredThoughts:Array<String> = ["WTF?!", "are you serious?", "holy shit", "help!", "let's gtfo!", "omg", "dafuq!", "run!"];
+	public static var happyThoughts:Array<String> = ["Woohoo!", "Party time!", ":D", "Haha!", "Hahahah", "Good idea!", "Who wants to get drunk?", "I feel like letting my guard down.", 
+														"Definitely nothing bad happening tonight.", "This weekend is going to be amazing!", "College rules!", "Who brought the beers?", 
+														"I can't wait to live a long and fulfilling life.", "Just some friends hanging out...", ":)", "No one here has ever seen a horror film."];
+	public static var suspiciousThoughts:Array<String> = ["What was that?", "D:", "Did you hear something?", "Did you hear that?", "Did you see that?", "???", "Guys?", "Uh...", "What the..."];
+	public static var scaredThoughts:Array<String> = ["WTF?!", "are you serious?", "holy shit", "help!", "let's gtfo!", "omg", "dafuq!", "run!", "aaaaaghgh!"];
 	public static var reliefThoughts:Array<String> = ["Guess it was nothing...", "Just my imagination...", "I must be hearing things...", "I must be seeing things...", "I'm being silly..."];
 
 	var wait:Int;
@@ -41,7 +42,7 @@ class Teen extends Entity {
 		state = HAPPY;
 
 		wait = Std.int(Math.random()*200);
-		thoughtTime = 400+Std.int(Math.random()*200);
+		thoughtTime = 200+Std.int(Math.random()*200);
 
 		var format = new TextFormat ("04b03", 8, 0xffffff);
 		format.align = openfl.text.TextFormatAlign.CENTER;

@@ -131,6 +131,10 @@ class Game extends Sprite {
 		else
 			killer.moveCount = 0;
 
+		if(keys.isDown(KeyObject.X)){
+			killer.slash();
+		}
+
 
 		data.fillRect(data.rect, 0x00000000);
 
