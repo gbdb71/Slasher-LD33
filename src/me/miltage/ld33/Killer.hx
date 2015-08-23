@@ -62,7 +62,7 @@ class Killer extends Entity {
 		return true;
 	}
 
-	override private function render(){
+	override public function render(){
 		visible = !hiding;
 
 		bmd.fillRect(bmd.rect, 0x00000000);
@@ -96,9 +96,17 @@ class Killer extends Entity {
 				if(pos.dist(teen.pos) < 20 && teen.health > 0){
 					teen.health--;
 					teen.setState(Teen.SCARED);
-					if(teen.health <= 0) teen.thought = "";
 					for(i in 0...10)
 					Game.instance.addBlood(new Blood(teen.pos.x, teen.pos.y, Math.random()*2-1));
+
+
+					if(teen.health <= 0){
+						teen.thought = "";
+						if(!Game.instance.checkOrder()){
+							Main.instance.loseScreen.visible = true;
+							Game.finished = true;
+						}
+					} 
 				}
 
 			}

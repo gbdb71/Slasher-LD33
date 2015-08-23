@@ -21,6 +21,7 @@ class KeyObject {
 	public static var Z:UInt = Keyboard.Z;
 	public static var X:UInt = Keyboard.X;
 	public static var C:UInt = Keyboard.C;
+	public static var SPACE:UInt = Keyboard.SPACE;
 
 	public function new(stage:Stage) {
 		construct(stage);

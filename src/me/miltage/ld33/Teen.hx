@@ -13,6 +13,8 @@ import me.miltage.ld33.math.BB;
 
 class Teen extends Entity {
 
+	public static var started:Bool = false;
+
 	public static var HAPPY:Int = 0;
 	public static var SUSPICIOUS:Int = 1;
 	public static var SCARED:Int = 2;
@@ -132,7 +134,7 @@ class Teen extends Entity {
 		
 	}
 
-	override private function render(){
+	override public function render(){
 		bmd.fillRect(bmd.rect, 0x00000000);
 		var row:Int = 0;
 		if(Math.abs(facing.x) > Math.abs(facing.y)){

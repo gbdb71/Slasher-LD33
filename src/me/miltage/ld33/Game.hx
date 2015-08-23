@@ -17,6 +17,8 @@ import me.miltage.ld33.utils.GraphicsUtil;
 class Game extends Sprite {
 
 	public static var instance:Game;
+	public static var started:Bool = false;
+	public static var finished:Bool = false;
 
 	public var entities:Array<Entity>;
 	public var teens:Array<Teen>;
@@ -128,7 +130,18 @@ class Game extends Sprite {
 
 	public function update(e:Event){
 
+		// sort
+		updateOrder();
+
 		// input
+		if(keys.isDown(KeyObject.SPACE) && !Game.started){
+			Game.started = true;
+			Main.instance.titleScreen.visible = false;
+		}
+		else if(keys.isDown(KeyObject.SPACE) && Game.finished){
+			Main.instance.restart();
+		}
+
 		if(keys.isDown(KeyObject.RIGHT) || keys.isDown(KeyObject.D))
 			killer.move(2, 0);
 		if(keys.isDown(KeyObject.LEFT) || keys.isDown(KeyObject.A))
@@ -161,9 +174,6 @@ class Game extends Sprite {
 				updateOrder();
 			}
 		}
-
-		// sort
-		updateOrder();
 
 		for(e in entities)
 			e.update();
@@ -230,7 +240,7 @@ class Game extends Sprite {
 	}
 
 	private function loadChars(){
-		killer = new Killer(this, 140, 180);
+		killer = new Killer(this, 80, 180);
 		entities.push(killer);
 		holder.addChild(killer);
 
@@ -336,7 +346,7 @@ class Game extends Sprite {
 		holder.addChild(tv);
 
 		var record = new Extra(this, 172, 186, 48, 36, "furniture", 80, 154);
-		record.register = 5;
+		record.register = 3;
 		record.bb = new BB(record, 194, 200, 207, 209);
 		entities.push(record);
 		extras.push(record);
@@ -368,6 +378,33 @@ class Game extends Sprite {
 		blood.push(b);
 		entities.push(b);
 		holder.addChild(b);
+	}
+
+	public function checkOrder(){
+		var alive = false;
+		for(teen in order){
+			if(teen.health <= 0 && alive)
+				return false;
+			else if(teen.health > 0)
+				alive = true;
+		}
+
+		if(alive == false){
+			Main.instance.winScreen.visible = true;
+			Game.finished = true;
+		}
+
+		return true;
+	}
+
+	public function dump(){
+		entities = [];
+		extras = [];
+		teens = [];
+		blood = [];
+		hidingPlaces = [];
+		windows = [];
+		order = [];
 	}
 
 }

@@ -28,7 +28,7 @@ class Extra extends Entity {
 
 	}
 
-	override private function render(){
+	override public function render(){
 		bmd.fillRect(bmd.rect, 0x00000000);
 		
 		bmd.copyPixels(sheet, new openfl.geom.Rectangle(clipx, clipy, w, h), new openfl.geom.Point(0, 0));

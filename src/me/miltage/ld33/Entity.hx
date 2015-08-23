@@ -150,7 +150,7 @@ class Entity extends Sprite implements BBOwner {
 		return false;
 	}
 
-	private function render(){
+	public function render(){
 
 	}
 

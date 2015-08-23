@@ -4,9 +4,9 @@ Things to do:
 + blood!
 + hiding
 + climb through windows
++ kill order
++ win/lose scenario
 
-- kill order
-- win/lose scenario
 - car
 - scenery
 - sound/music
