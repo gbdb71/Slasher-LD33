@@ -42,18 +42,22 @@ class NavMesh {
 
 	public function findPath(p0:Vec2, p1:Vec2):Array<Vec2> {
 		var result = new Array<Vec2>();
+
+		if(LOS.canSee(p0, p1)){
+			result.push(p1);
+			return result;
+		}
+
 		var startNode = getClosestNode(p0);
 		if(startNode == null){
 			trace("cant find start node");
 			return result;
 		}
-		trace("closest node is "+startNode.x+", "+startNode.y);
 		var endNode = getClosestNode(p1);
 		if(endNode == null){
 			trace("cant find end node");
 			return result;
 		}
-		trace("closest node is "+endNode.x+", "+endNode.y);
 
 		var checked = new Array<NavPoint>();
 		var unchecked = new Array<NavPoint>();
@@ -73,9 +77,7 @@ class NavMesh {
 				return result;
 			}
 			current = unchecked.shift();
-			trace(current.x, current.y, endNode.x, endNode.y);
 		}
-		trace("solved");
 
 		result.push(p1);
 		while(current.x != startNode.x || current.y != startNode.y){
@@ -83,7 +85,6 @@ class NavMesh {
 			current = current.parent;
 		}
 		result.push(new Vec2(startNode.x, startNode.y));
-		trace("path has "+result.length+" nodes");
 
 		for(node in nodes) node.parent = null;
 
@@ -127,7 +128,6 @@ class NavMesh {
 
 	private function getNeighboursByDistance(n:NavPoint, p:Vec2):Array<NavPoint> {
 		var result = n.neighbours.copy();
-		trace("Point has "+result.length+" neighbours");
 
 		for(i in 0...result.length-1){
 			for(j in i+1...result.length){
