@@ -25,6 +25,7 @@ class Game extends Sprite {
 	public var teens:Array<Teen>;
 	public var extras:Array<Entity>;
 	public var blood:Array<Blood>;
+	public var rain:Array<Rain>;
 	public var hidingPlaces:Array<Vec2>;
 	public var windows:Array<Vec2>;
 	public var order:Array<Teen>;
@@ -34,12 +35,15 @@ class Game extends Sprite {
 	var data:BitmapData;
 	var effect:BitmapData;
 	var hud:BitmapData;
+	var weather:BitmapData;
 	var holder:Sprite;
 
 	var keys:KeyObject;
 	var ui:BitmapData;
 	var car:Car;
 	var roof:Bitmap;
+
+	var rainDelay:Int;
 
 	var worldBBs:Array<BB>;
 
@@ -56,6 +60,7 @@ class Game extends Sprite {
 		hidingPlaces = [];
 		windows = [];
 		order = [];
+		rain = [];
 
 		keys = new KeyObject(Lib.current.stage);
 		holder = new Sprite();
@@ -123,22 +128,33 @@ class Game extends Sprite {
 				GraphicsUtil.drawLine(data, node.x, node.y, n.x, n.y, 0xffff0000);*/
 		}
 
+		roof = new Bitmap(Assets.getBitmapData("assets/roof.png"));
+		addChild(roof);
+
+		weather = new BitmapData(Std.int(Lib.application.window.width/Main.scale), Std.int(Lib.application.window.height/Main.scale), true, 0x00000000);
+		b = new Bitmap(weather);
+		addChild(b);
 
 		hud = new BitmapData(Std.int(Lib.application.window.width/Main.scale), Std.int(Lib.application.window.height/Main.scale), true, 0x00000000);
 		b = new Bitmap(hud);
 		addChild(b);
 
-		roof = new Bitmap(Assets.getBitmapData("assets/roof.png"));
-		addChild(roof);
+		for(i in 0...100){
+			rain.push(new Rain());
+		}
 
 	}
 
 	public function update(e:Event){
+		data.fillRect(data.rect, 0x00000000);
+		weather.fillRect(data.rect, 0x00000000);
 
 		if(Game.started) runCounter++;
 
-		if(runCounter == 300)
+		if(runCounter == 300){
 			addKiller();
+			rainDelay = 9;
+		}
 
 		// sort
 		updateOrder();
@@ -202,8 +218,6 @@ class Game extends Sprite {
 			}
 		}
 
-		data.fillRect(data.rect, 0x00000000);
-
 		for(teen in teens){
 			if(killer == null) break;
 			if(teen.state == Teen.SCARED) break;
@@ -224,6 +238,10 @@ class Game extends Sprite {
 		}
 
 		if(runCounter > 150) roof.alpha -= 0.015;
+
+		if(rainDelay > 0) rainDelay--;
+		if(rainDelay < 10 && rainDelay % 3 == 0) lightning();
+		drawRain();
 	}
 
 	private function updateOrder(){		
@@ -429,6 +447,18 @@ class Game extends Sprite {
 		hidingPlaces = [];
 		windows = [];
 		order = [];
+	}
+
+	private function lightning(){
+		weather.fillRect(weather.rect, 0xffffffff);
+		if(rainDelay == 0) rainDelay = Std.int(200+Math.random()*400);
+	}
+
+	private function drawRain(){
+		for(drop in rain){
+			drop.update();
+			GraphicsUtil.drawLine(weather, drop.x, drop.y, drop.x-3, drop.y+8, 0xff475b71);
+		}
 	}
 
 }
