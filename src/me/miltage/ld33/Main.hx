@@ -27,7 +27,7 @@ class Main extends Sprite {
 
 	public function leftClick(m:MouseEvent){
 		trace(m.stageX/scale+", "+m.stageY/scale);
-		game.entities[1].findPath(new me.miltage.ld33.math.Vec2(m.stageX/scale, m.stageY/scale));
+		//game.entities[1].findPath(new me.miltage.ld33.math.Vec2(m.stageX/scale, m.stageY/scale));
 	}
 	
 	

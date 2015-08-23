@@ -22,6 +22,7 @@ class Entity extends Sprite implements BBOwner {
 	private var yoffset:Int;
 	private var bounce:Float;
 	private var path:Array<Vec2>;
+	public var moveCount:Int;
 
 	public function new(game, x, y, w, h){
 		super();
@@ -32,6 +33,7 @@ class Entity extends Sprite implements BBOwner {
 		pos = new Vec2(x, y);
 		facing = new Vec2(0, 1);
 		bounce = 0;
+		moveCount = 0;
 		path = new Array<Vec2>();
 
 		bmd = new BitmapData(w, h, true, 0x353d31);
@@ -74,6 +76,8 @@ class Entity extends Sprite implements BBOwner {
 		var moved = false;
 		moved = partMove(bbs, xa, 0);
 		moved = partMove(bbs, 0, ya);
+		facing.set(xa, ya);
+		bounce = Math.sin(moveCount/1.5)*2;
 		return moved;
 	}
 
@@ -137,8 +141,8 @@ class Entity extends Sprite implements BBOwner {
 			closest.owner.handleCollision(this, oxa, oya);
 		}
 		if (xa != 0 || ya != 0) {
-			pos.x += xa;
-			pos.y += ya;
+			pos.x += xa*0.8;
+			pos.y += ya*0.8;
 			return true;
 		}
 		return false;

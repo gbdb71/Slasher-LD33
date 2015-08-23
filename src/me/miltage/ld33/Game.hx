@@ -70,13 +70,25 @@ class Game extends Sprite {
 
 		entities = [];
 
-		var e = new Entity(this, 200, 200, 8, 8);
+		var e = new Killer(this, 200, 200);
 		entities.push(e);
 		addChild(e);
 
-		var t0 = new Teen(this, 220, 180);
+		var t0 = new Teen(this, 220, 180, "token");
 		entities.push(t0);
 		addChild(t0);
+
+		var t1 = new Teen(this, 220, 180, "todd");
+		entities.push(t1);
+		addChild(t1);
+
+		var t2 = new Teen(this, 220, 180, "roxanne");
+		entities.push(t2);
+		addChild(t2);
+
+		var t3 = new Teen(this, 220, 180, "jessica");
+		entities.push(t3);
+		addChild(t3);
 
 		addEventListener(Event.ENTER_FRAME, update);
 
@@ -91,9 +103,9 @@ class Game extends Sprite {
 			GraphicsUtil.drawLine(data, bb.x1, bb.y0, bb.x1, bb.y1, 0xffff0000);*/
 		}
 		for(node in navMesh.nodes){
-			data.setPixel32(Std.int(node.x), Std.int(node.y), 0xffff0000);
+			/*data.setPixel32(Std.int(node.x), Std.int(node.y), 0xffff0000);
 			for(n in node.neighbours)
-				GraphicsUtil.drawLine(data, node.x, node.y, n.x, n.y, 0xffff0000);
+				GraphicsUtil.drawLine(data, node.x, node.y, n.x, n.y, 0xffff0000);*/
 		}
 
 	}
@@ -111,6 +123,12 @@ class Game extends Sprite {
 		if(keys.isDown(KeyObject.DOWN) || keys.isDown(KeyObject.S))
 			entities[0].move(0, 2);
 
+		if(keys.isDown(KeyObject.RIGHT) || keys.isDown(KeyObject.D) || keys.isDown(KeyObject.LEFT) || keys.isDown(KeyObject.A)
+			|| keys.isDown(KeyObject.UP) || keys.isDown(KeyObject.W) || keys.isDown(KeyObject.DOWN) || keys.isDown(KeyObject.S))
+			entities[0].moveCount++;
+		else
+			entities[0].moveCount = 0;
+
 
 		//data.fillRect(data.rect, 0x00000000);
 
@@ -125,7 +143,7 @@ class Game extends Sprite {
 		bounds = bounds.grow(5);		
 
 		for(bb in worldBBs){
-			//if(bounds.intersectsBB(bb))
+			if(bounds.intersectsBB(bb))
 				list.push(bb);
 		}
 
