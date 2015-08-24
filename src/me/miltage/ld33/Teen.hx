@@ -21,7 +21,9 @@ class Teen extends Entity {
 
 	public static var happyThoughts:Array<String> = ["Woohoo!", "Party time!", ":D", "Haha!", "Hahahah", "Good idea!", "Who wants to get drunk?", "I feel like letting my guard down.", 
 														"Definitely nothing bad happening tonight.", "This weekend is going to be amazing!", "College rules!", "Who brought the beers?", 
-														"I can't wait to live a long and fulfilling life.", "Just some friends hanging out...", ":)", "No one here has ever seen a horror film."];
+														"I can't wait to live a long and fulfilling life.", "Just some friends hanging out...", ":)", "No one here has ever seen a horror film.",
+													"These floorboards sure are creaky.", "This cabin is a littly spooky...", "We should definitely split up.", "Anyone rememember that one time at band camp?",
+													"I told my parents I'm studying right now."];
 	public static var suspiciousThoughts:Array<String> = ["What was that?", "D:", "Did you hear something?", "Did you hear that?", "Did you see that?", "???", "Guys?", "Uh...", "What the..."];
 	public static var scaredThoughts:Array<String> = ["WTF?!", "are you serious?", "holy shit", "help!", "let's gtfo!", "omg", "dafuq!", "run!", "aaaaaghgh!"];
 	public static var reliefThoughts:Array<String> = ["Guess it was nothing...", "Just my imagination...", "I must be hearing things...", "I must be seeing things...", "I'm being silly..."];
