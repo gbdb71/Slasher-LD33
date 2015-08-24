@@ -26,6 +26,7 @@ class Main extends Sprite {
 	public var soundManager2:SoundManager;
 
 	private var thunderCounter:Int = 1;
+	private var timer:Timer;
 
 	public function new () {
 		
@@ -79,6 +80,7 @@ class Main extends Sprite {
 		addChildAt(game, 0);
 		Game.started = true;		
 		soundManager.loop("assets/eerie.mp3");
+		timer = null;
 	}
 
 	// AC DC
@@ -88,12 +90,15 @@ class Main extends Sprite {
 	}
 
 	public function showScreen(screen){
-		var t = new Timer(1000);
-		t.run = function() {
+		if(timer != null) return;
+
+		timer = new Timer(1000);
+		trace("show screen");
+		timer.run = function() {
 			screen.visible = true;
 			Game.finished = true;
 			Game.runCounter = 0;
-			t.stop();
+			timer.stop();
 		}
 	}
 
