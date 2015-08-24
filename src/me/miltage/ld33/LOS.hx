@@ -4,7 +4,7 @@ import me.miltage.ld33.math.Vec2;
 
 class LOS {
 	
-	public static function canSee(p0:Vec2, p1:Vec2, size:Int=4):Bool {
+	public static function canSee(p0:Vec2, p1:Vec2, size:Int=4, includeFurni:Bool=false):Bool {
 		if(p0.dist(p1) < size) return true;
 		var x0 = Std.int(p0.x);
 		var x1 = Std.int(p1.x);
@@ -30,7 +30,7 @@ class LOS {
 				}
 				x0 += stepx;
 				fraction += dy;
-				var bbs = Game.instance.getBBs(new me.miltage.ld33.math.BB(null, x0-10, y0-10, x0+10, y0+10));
+				var bbs = Game.instance.getBBs(new me.miltage.ld33.math.BB(null, x0-10, y0-10, x0+10, y0+10), includeFurni);
 				for(bb in bbs){
 					if(bb.intersects(x0-size, y0-size, x0+size, y0+size))
 						return false;
@@ -45,7 +45,7 @@ class LOS {
 				}
 				y0 += stepy;
 				fraction += dx;
-				var bbs = Game.instance.getBBs(new me.miltage.ld33.math.BB(null, x0-10, y0-10, x0+10, y0+10));
+				var bbs = Game.instance.getBBs(new me.miltage.ld33.math.BB(null, x0-10, y0-10, x0+10, y0+10), includeFurni);
 				for(bb in bbs){
 					if(bb.intersects(x0-size, y0-size, x0+size, y0+size))
 						return false;

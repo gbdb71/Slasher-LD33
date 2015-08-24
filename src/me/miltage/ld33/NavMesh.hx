@@ -43,7 +43,7 @@ class NavMesh {
 	public function findPath(p0:Vec2, p1:Vec2):Array<Vec2> {
 		var result = new Array<Vec2>();
 
-		if(LOS.canSee(p0, p1)){
+		if(LOS.canSee(p0, p1, 4, true)){
 			result.push(p1);
 			return result;
 		}

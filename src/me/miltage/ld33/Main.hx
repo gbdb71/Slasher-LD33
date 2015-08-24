@@ -93,7 +93,6 @@ class Main extends Sprite {
 		if(timer != null) return;
 
 		timer = new Timer(1000);
-		trace("show screen");
 		timer.run = function() {
 			screen.visible = true;
 			Game.finished = true;
