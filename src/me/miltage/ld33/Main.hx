@@ -6,6 +6,7 @@ import openfl.display.Bitmap;
 import openfl.Lib;
 import openfl.Assets;
 import openfl.events.MouseEvent;
+import haxe.Timer;
 
 import me.miltage.ld33.utils.SoundManager;
 
@@ -13,6 +14,7 @@ import me.miltage.ld33.utils.SoundManager;
 class Main extends Sprite {
 	public static var instance:Main;
 	public static var scale:Int = 2;
+	public static var mute:Bool = false;
 	
 	public static var game:Game;
 
@@ -60,7 +62,8 @@ class Main extends Sprite {
 
 	public function leftClick(m:MouseEvent){
 		trace(m.stageX/scale+", "+m.stageY/scale);
-		//game.entities[1].findPath(new me.miltage.ld33.math.Vec2(m.stageX/scale, m.stageY/scale));
+		if(m.stageX > Lib.application.window.width - 32 && m.stageY < 32)
+			muteGame();
 	}
 
 	public function restart(){
@@ -82,6 +85,23 @@ class Main extends Sprite {
 	public function thunderStruck(){
 		soundManager2.play("assets/thunder"+thunderCounter+".mp3");
 		thunderCounter = thunderCounter==1?2:1;
+	}
+
+	public function showScreen(screen){
+		var t = new Timer(1000);
+		t.run = function() {
+			screen.visible = true;
+			Game.finished = true;
+			Game.runCounter = 0;
+			t.stop();
+		}
+	}
+
+	public function muteGame(){
+		mute = !mute;
+		for(m in SoundManager.managers){
+			m.transform(mute?0:1);
+		}
 	}
 	
 	

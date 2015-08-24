@@ -238,6 +238,8 @@ class Game extends Sprite {
 			hud.copyPixels(ui, new Rectangle(order[i].portrait*16, 32+(order[i].health>0?0:16), 16, 16), new Point(i*16+5, Std.int(Lib.application.window.height/Main.scale)-21));
 		}
 
+		hud.copyPixels(ui, new Rectangle(16*(Main.mute?1:0), 16, 16, 16), new Point(Std.int(Lib.application.window.width/Main.scale)-18, 4));
+
 		if(runCounter > 150) roof.alpha -= 0.015;
 
 		if(rainDelay == 9) Main.instance.thunderStruck();
@@ -440,10 +442,7 @@ class Game extends Sprite {
 				alive = true;
 		}
 
-		if(alive == false){
-			Main.instance.winScreen.visible = true;
-			Game.finished = true;
-		}
+		if(alive == false) Main.instance.showScreen(Main.instance.winScreen);
 
 		return true;
 	}

@@ -119,8 +119,7 @@ class Teen extends Entity {
 		if(state == SUSPICIOUS && suspTime > 225){
 			state = SCARED;
 			if(!Game.instance.checkOrder()){
-				Main.instance.loseScreen.visible = true;
-				Game.finished = true;
+				Main.instance.showScreen(Main.instance.loseScreen);
 			}
 		}
 
@@ -128,10 +127,7 @@ class Teen extends Entity {
 		for(teen in Game.instance.teens){
 			if(pos.dist(teen.pos) < 40 && teen.state == SCARED && teen.health > 0){
 				state = SCARED;
-				if(!Game.instance.checkOrder()){
-					Main.instance.loseScreen.visible = true;
-					Game.finished = true;
-				}
+				if(!Game.instance.checkOrder()) Main.instance.showScreen(Main.instance.loseScreen);
 			}
 		}
 

@@ -109,10 +109,7 @@ class Killer extends Entity {
 						teen.thought = "";
 					}
 
-					if(!Game.instance.checkOrder()){
-						Main.instance.loseScreen.visible = true;
-						Game.finished = true;
-					}
+					if(!Game.instance.checkOrder()) Main.instance.showScreen(Main.instance.loseScreen);
 				}
 
 			}
