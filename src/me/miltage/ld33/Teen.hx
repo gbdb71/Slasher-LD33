@@ -116,12 +116,21 @@ class Teen extends Entity {
 
 		if(state == SUSPICIOUS && suspTime > 225){
 			state = SCARED;
+			if(!Game.instance.checkOrder()){
+				Main.instance.loseScreen.visible = true;
+				Game.finished = true;
+			}
 		}
 
 		// infectious
 		for(teen in Game.instance.teens){
-			if(pos.dist(teen.pos) < 40 && teen.state == SCARED)
+			if(pos.dist(teen.pos) < 40 && teen.state == SCARED && teen.health > 0){
 				state = SCARED;
+				if(!Game.instance.checkOrder()){
+					Main.instance.loseScreen.visible = true;
+					Game.finished = true;
+				}
+			}
 		}
 
 		// bleeding hell!

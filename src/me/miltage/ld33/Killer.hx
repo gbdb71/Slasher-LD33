@@ -43,12 +43,12 @@ class Killer extends Entity {
 		letter.visible = false;
 
 		for(hp in Game.instance.hidingPlaces){
-			if(pos.dist(hp) < 20)
+			if(pos.dist(hp) < 10)
 				letter.visible = true;
 		}
 
 		for(w in Game.instance.windows){
-			if(pos.dist(w) < 20)
+			if(pos.dist(w) < 10)
 				letter.visible = true;
 		}
 
@@ -105,14 +105,14 @@ class Killer extends Entity {
 					for(i in 0...10)
 					Game.instance.addBlood(new Blood(teen.pos.x, teen.pos.y, Math.random()*2-1));
 
-
 					if(teen.health <= 0){
 						teen.thought = "";
-						if(!Game.instance.checkOrder()){
-							Main.instance.loseScreen.visible = true;
-							Game.finished = true;
-						}
-					} 
+					}
+
+					if(!Game.instance.checkOrder()){
+						Main.instance.loseScreen.visible = true;
+						Game.finished = true;
+					}
 				}
 
 			}
@@ -121,7 +121,7 @@ class Killer extends Entity {
 
 	public function canHide():Bool {
 		for(hp in Game.instance.hidingPlaces){
-			if(pos.dist(hp) < 20)
+			if(pos.dist(hp) < 10)
 				return true;
 		}
 		return false;
@@ -129,7 +129,7 @@ class Killer extends Entity {
 
 	public function canWindow():Bool {
 		for(w in Game.instance.windows){
-			if(pos.dist(w) < 20)
+			if(pos.dist(w) < 10)
 				return true;
 		}
 		return false;

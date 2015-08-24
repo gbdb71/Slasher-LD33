@@ -188,7 +188,7 @@ class Game extends Sprite {
 				killer.moveCount = 0;
 
 			if(keys.isDown(KeyObject.X)){
-				killer.slash();
+				if(!killer.hiding) killer.slash();
 			}
 
 			if(keys.isDown(KeyObject.C)){
@@ -328,14 +328,14 @@ class Game extends Sprite {
 		holder.addChild(wardrobe);
 
 		var bed = new Extra(this, 116, 104, 48, 32, "furniture", 24, 72);
-		bed.register = 5;		
+		bed.register = 0;		
 		bed.bb = new BB(bed, 119, 125, 155, 132);
 		entities.push(bed);
 		extras.push(bed);
 		holder.addChild(bed);
 
 		var bed2 = new Extra(this, 95, 125, 48, 32, "furniture", 24, 72);
-		bed2.register = 3;
+		bed2.register = 1;
 		bed2.bb = new BB(bed2, 98, 140, 133, 152);
 		entities.push(bed2);
 		extras.push(bed2);
@@ -379,6 +379,8 @@ class Game extends Sprite {
 		hidingPlaces.push(new Vec2(112, 75));
 		hidingPlaces.push(new Vec2(112, 200));
 		hidingPlaces.push(new Vec2(310, 75));
+		hidingPlaces.push(new Vec2(115, 150));
+		hidingPlaces.push(new Vec2(138, 120));
 
 		windows.push(new Vec2(145, 68));
 		windows.push(new Vec2(222, 67));
@@ -427,7 +429,11 @@ class Game extends Sprite {
 
 	public function checkOrder(){
 		var alive = false;
+		var scared = true;
 		for(teen in order){
+			if(alive && teen.state == Teen.SCARED)
+				return false;
+
 			if(teen.health <= 0 && alive)
 				return false;
 			else if(teen.health > 0)

@@ -9,5 +9,6 @@ Things to do:
 + car
 + scenery
 + sound/music
++ lose when spotted
 
-- lose when spotted
+All done!
