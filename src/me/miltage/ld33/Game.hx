@@ -221,7 +221,7 @@ class Game extends Sprite {
 
 		for(teen in teens){
 			if(killer == null) break;
-			if(teen.state == Teen.SCARED) break;
+			if(teen.state == Teen.SCARED) continue;
 			if(LOS.canSee(teen.pos, killer.pos, 1) && teen.facing.dot(killer.pos.sub(teen.pos)) > 0.7 && !killer.hiding){
 				GraphicsUtil.drawStaggeredLine(data, killer.pos.x, killer.pos.y, teen.pos.x, teen.pos.y, 0xffff0000);
 				teen.thought = "!";
