@@ -143,6 +143,7 @@ class Game extends Sprite {
 			rain.push(new Rain());
 		}
 
+
 	}
 
 	public function update(e:Event){
@@ -239,9 +240,11 @@ class Game extends Sprite {
 
 		if(runCounter > 150) roof.alpha -= 0.015;
 
+		if(rainDelay == 9) Main.instance.thunderStruck();
 		if(rainDelay > 0) rainDelay--;
 		if(rainDelay < 10 && rainDelay % 3 == 0) lightning();
 		drawRain();
+
 	}
 
 	private function updateOrder(){		
@@ -382,7 +385,7 @@ class Game extends Sprite {
 	}
 
 	public function addTeens(){
-		var t0 = new Teen(this, 165, 277, "token");
+		var t0 = new Teen(this, 165, 285, "token");
 		t0.portrait = 0;
 		entities.push(t0);
 		teens.push(t0);
@@ -394,7 +397,7 @@ class Game extends Sprite {
 		teens.push(t1);
 		holder.addChild(t1);
 
-		var t2 = new Teen(this, 170, 277, "roxanne");
+		var t2 = new Teen(this, 170, 285, "roxanne");
 		t2.portrait = 2;
 		entities.push(t2);
 		teens.push(t2);
@@ -447,6 +450,9 @@ class Game extends Sprite {
 		hidingPlaces = [];
 		windows = [];
 		order = [];
+		rain = [];		
+		removeEventListener(Event.ENTER_FRAME, update);
+
 	}
 
 	private function lightning(){

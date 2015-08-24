@@ -15,6 +15,7 @@ class Killer extends Entity {
 	var hackWait:Int;
 
 	var letter:Bitmap;
+	var hackCount:Int;
 
 	public var hiding:Bool;
 	public var hideDelay:Int;
@@ -53,6 +54,9 @@ class Killer extends Entity {
 
 
 		if(hideDelay > 0) hideDelay--;
+
+		if(hackCount > 0) hackCount--;
+		else Main.instance.soundManager.loop("assets/eerie.mp3");
 
 	}
 
@@ -96,6 +100,8 @@ class Killer extends Entity {
 				if(pos.dist(teen.pos) < 20 && teen.health > 0){
 					teen.health--;
 					teen.setState(Teen.SCARED);
+					Main.instance.soundManager.loop("assets/psycho.mp3");
+					hackCount = 190;
 					for(i in 0...10)
 					Game.instance.addBlood(new Blood(teen.pos.x, teen.pos.y, Math.random()*2-1));
 

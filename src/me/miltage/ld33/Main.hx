@@ -7,16 +7,23 @@ import openfl.Lib;
 import openfl.Assets;
 import openfl.events.MouseEvent;
 
+import me.miltage.ld33.utils.SoundManager;
+
 
 class Main extends Sprite {
 	public static var instance:Main;
 	public static var scale:Int = 2;
 	
-	var game:Game;
+	public static var game:Game;
 
 	public var titleScreen:Bitmap;
 	public var winScreen:Bitmap;
 	public var loseScreen:Bitmap;
+
+	public var soundManager:SoundManager;
+	public var soundManager2:SoundManager;
+
+	private var thunderCounter:Int = 1;
 
 	public function new () {
 		
@@ -24,6 +31,11 @@ class Main extends Sprite {
 
 		instance = this;
 		Lib.current.stage.quality = flash.display.StageQuality.LOW;
+
+		soundManager = new SoundManager(1);
+		soundManager.loop("assets/eerie.mp3");
+
+		soundManager2 = new SoundManager(.5);
 
 		game = new Game();
 		game.scaleX = game.scaleY = scale;
@@ -54,14 +66,22 @@ class Main extends Sprite {
 	public function restart(){
 		loseScreen.visible = winScreen.visible = titleScreen.visible = false;
 		removeChild(game);
+		game.dump();
+		game = null;
 		Game.started = false;
 		Game.finished = false;
 		Game.runCounter = 0;
-		game.dump();
 		game = new Game();
 		game.scaleX = game.scaleY = scale;
 		addChildAt(game, 0);
-		Game.started = true;
+		Game.started = true;		
+		soundManager.loop("assets/eerie.mp3");
+	}
+
+	// AC DC
+	public function thunderStruck(){
+		soundManager2.play("assets/thunder"+thunderCounter+".mp3");
+		thunderCounter = thunderCounter==1?2:1;
 	}
 	
 	

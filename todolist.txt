@@ -8,5 +8,6 @@ Things to do:
 + win/lose scenario
 + car
 + scenery
++ sound/music
 
-- sound/music
+- lose when spotted

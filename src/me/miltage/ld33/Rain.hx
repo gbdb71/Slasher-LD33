@@ -4,8 +4,8 @@ class Rain {
 	public var x:Int;
 	public var y:Int;
 	public function new(){
-		x = Std.int(Math.random()*400);
-		y = Std.int(Math.random()*300);
+		x = Std.int(Math.random()*600)-300;
+		y = Std.int(Math.random()*800)-400;
 
 
 	}
